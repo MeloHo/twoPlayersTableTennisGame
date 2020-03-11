@@ -12,3 +12,9 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # add subdirectory here
+
+add_subdirectory(src/server) # All source files goes into src
+add_subdirectory(src/client)
+
+
+add_subdirectory(utils) # All external libs goes here
