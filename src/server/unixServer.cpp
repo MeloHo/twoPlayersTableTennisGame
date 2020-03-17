@@ -2,7 +2,6 @@
 Server for Unix Platform.
 
 Basic Logic:
-
 	Set up server socket.
 	Bind it with some IP::Port.
 	Wait for client connection.
@@ -14,3 +13,5 @@ Basic Logic:
 
 	Close the socket.
 */
+
+

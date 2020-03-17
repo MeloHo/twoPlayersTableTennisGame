@@ -10,6 +10,8 @@ Basic Logic:
 		Send position message to server
 		Receive position message from server
 		Draw the graphics
+		
 
 	Close socket 
 */
+
