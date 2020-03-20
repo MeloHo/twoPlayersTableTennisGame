@@ -8,9 +8,9 @@ Base class
 class Entity
 {
 public:
-	virtual void draw() const = 0;
-	static double timeInvertal = 0.1;
-	
+	virtual void draw() = 0;
+	static double timeInvertal;
+
 };
 
 #endif
