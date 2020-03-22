@@ -1,0 +1,3 @@
+/home/lance/twoPlayersTableTennisGame/src/CMakeFiles/rebuild_cache.dir
+/home/lance/twoPlayersTableTennisGame/src/CMakeFiles/lserver.dir
+/home/lance/twoPlayersTableTennisGame/src/CMakeFiles/edit_cache.dir

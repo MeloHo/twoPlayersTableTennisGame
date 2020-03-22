@@ -45,7 +45,7 @@ bool Server::connected(int sock)
         return true;
 }
 
-void Server::StartServer()
+int Server::StartServer()
 {
     //buffer to send and receive messages with
     char msg1[msgSize];
@@ -63,14 +63,14 @@ void Server::StartServer()
     int serverSd = socket(AF_INET, SOCK_STREAM, 0);
     if(serverSd < 0)
     {
-        cerr << "Error establishing the server socket" << endl;
+        std::cerr << "Error establishing the server socket" << endl;
         exit(0);
     }
     //bind the socket to its local address
     int bindStatus = bind(serverSd, (struct sockaddr*) &servAddr, sizeof(servAddr));
     if(bindStatus < 0)
     {
-        cerr << "Error binding socket to local address" << endl;
+        std::cerr << "Error binding socket to local address" << endl;
         exit(0);
     }
 
