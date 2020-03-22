@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/lclient.dir/client.cpp.o CMakeFiles/lclient.dir/linuxClient.cpp.o  -o lclient 

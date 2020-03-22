@@ -22,5 +22,7 @@ int main(int argc, char *argv[])
 	int ret = server.StartServer();
 
 	printf("session ended\n");
+	
 	return 0;
 }
+

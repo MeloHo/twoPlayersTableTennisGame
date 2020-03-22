@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/lserver.dir/server.cpp.o CMakeFiles/lserver.dir/linuxServer.cpp.o  -o lserver 

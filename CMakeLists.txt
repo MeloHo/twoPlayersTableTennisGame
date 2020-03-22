@@ -1,20 +1,21 @@
-cmake_minimum_required(VERSION 3.1)
-
-if($(CMAKE_VERSION) VERSION_LESS 3.15)
-	cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
-else()
-	cmake_policy(VERSION 3.15)
-endif()
-
-project(TennisGame VERSION 1.0 LANGUAGES CXX)
+project(TableTennisGame)
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+cmake_minimum_required(VERSION 3.5)
 
-# add subdirectory here
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
-add_subdirectory(src/server) # All source files goes into src
-add_subdirectory(src/client)
+#############################
+#Dependencies
+#############################
 
+find_package(Eigen3 REQUIRED)
 
-add_subdirectory(utils) # All external libs goes here
+include_directories(${EIGEN3_INCLUDE_DIR})
+
+#############################
+#Build Executable
+#############################
+
+add_executable(lclient src/client/client.cpp src/client/linuxClient.cpp src/client/linuxClient.hpp)
+add_executable(lserver src/server/server.cpp src/server/linuxServer.hpp src/server/linuxServer.cpp)
