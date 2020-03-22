@@ -7,23 +7,27 @@ This class defines the ball.
 
 #include <cstdlib>
 #include <iostream>
+#include <math.h>
 #include "Entity.h"
+#include <fslazywindow.h>
+
+using namespace std;
 
 class Ball: public Entity {
 private:
-	int posX;
-	int posY;
-	int velX;
-	int velY;
-	int r,g,b;
+	float x, y, z;
+	float vx, vy, vz;
+	float initX, initY, initZ;
+	float R;
+	float g;
+
 
 public:
 	Ball(){}
-	Ball(int initialX, int initialY, int initialVX, int initialVY);
+	Ball(float nx, float ny, float nz);
 	~Ball(){}
-	void draw() const;
-	void update();
+	void draw();
+	void update(float nx, float ny, float nz, float nvx, float nvy, float nvz);
 };
-
 
 #endif
