@@ -15,7 +15,6 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <fstream>
-using namespace std;
 
 Client::Client(int p, char * ip)
 {
@@ -23,15 +22,15 @@ Client::Client(int p, char * ip)
 	this->serverIp = ip;
 }
 
-string Client::msgToSend()
+std::string Client::msgToSend()
 {
-    string data;
-    getline(cin, data);
+    std::string data;
+    getline(std::cin, data);
     return data;
 }
 
 //decode message
-string Client::msgReceived()
+std::string Client::msgReceived()
 {
     return "s";
 }
@@ -47,8 +46,6 @@ bool Client::connected(int sock)
 
 int Client::Connect()
 {
-	char msg[msgSize]; 
-
     struct hostent* host = gethostbyname(serverIp); 
     sockaddr_in sendSockAddr;   
     bzero((char*)&sendSockAddr, sizeof(sendSockAddr)); 
@@ -62,55 +59,27 @@ int Client::Connect()
 
     if(status < 0)
     {
-        cout<<"Error connecting to socket!"<<endl;
+        std::cout<<"Error connecting to server!"<< std::endl;
         return -1;
     }
-    cout << "Connected to the server!" << endl;
+    std::cout << "Connected to the server!" << std::endl;
 
-    int bytesRead, bytesWritten = 0;
+    return clientSd;
+}
 
-    struct timeval start1, end1;
-    gettimeofday(&start1, NULL);
-
-    while(1)
-    {
-        if (!connected(clientSd)) break;
-
-        cout << ">";
-        string data = msgToSend();
-        
-        memset(&msg, 0, sizeof(msg));
-        strcpy(msg, data.c_str());
-
-        if(data == "exit")
-        {
-            send(clientSd, (char*)&msg, strlen(msg), 0);
-            break;
-        }
-
-        bytesWritten += send(clientSd, (char*)&msg, strlen(msg), 0);
-        cout << "Message Sent:" << msg <<"\nAwaiting server response..." << endl;
-
-        memset(&msg, 0, sizeof(msg));
-
-        bytesRead += recv(clientSd, (char*)&msg, sizeof(msg), 0);
-
-        if(!strcmp(msg, "exit"))
-        {
-            cout << "Server has quit the session" << endl;
-            break;
-        }
-
-        cout << "Server: " << msg << endl;
-    }
-
-    gettimeofday(&end1, NULL);
+int Client::CloseConnection(int clientSd)
+{
     close(clientSd);
-    cout << "********Session********" << endl;
-    cout << "Bytes written: " << bytesWritten << 
-    " Bytes read: " << bytesRead << endl;
-    cout << "Elapsed time: " << (end1.tv_sec- start1.tv_sec) 
-      << " secs" << endl;
-    cout << "Connection closed" << endl;
-    return 0;    
+
+    return 0;
+}
+
+std::string Client::getState()
+{
+    return "";
+}
+
+std::string Client::encode()
+{
+    return "1";
 }
