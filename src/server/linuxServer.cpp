@@ -67,7 +67,7 @@ int Server::StartServer()
         exit(0);
     }
     //bind the socket to its local address
-    int bindStatus = bind(serverSd, (struct sockaddr*) &servAddr, sizeof(servAddr));
+    int bindStatus = ::bind(serverSd, (struct sockaddr*) &servAddr, sizeof(servAddr));
     if(bindStatus < 0)
     {
         std::cerr << "Error binding socket to local address" << endl;
