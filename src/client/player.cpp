@@ -4,6 +4,8 @@ Player::Player() {
   x = 0.0f;
   y = 0.0f;
   z = 0.0f;
+  ay = 0.0f;
+  az = 0.0f;
   makeRacket2d();
   makeFace2d();
   makeHandle2d();
@@ -16,6 +18,8 @@ Player::Player(float nx, float ny, float nz) {
   x = nx;
   y = ny;
   z = nz;
+  ay = 0.0f;
+  az = 0.0f;
   makeRacket2d();
   makeFace2d();
   makeHandle2d();
@@ -32,7 +36,8 @@ void Player::makeHandle2d() {
     0.0f, -7.5f, 1.4f,
     0.0f, -10.6f, 1.5f,
     0.0f, -15.7f, 1.65f,
-    0.0f, -15.7f, -1.65f
+    0.0f, -15.7f, -1.65f,
+    0.0f, -10.6f, -1.5f
   };
 }
 
@@ -65,7 +70,8 @@ void Player::makeRacket2d() {
     0.0f, -8.6f, 2.5f,
     0.0f, -10.6f, 1.5f,
     0.0f, -15.7f, 1.65f,
-    0.0f, -15.7f, -1.65f
+    0.0f, -15.7f, -1.65f,
+    0.0f, -10.6f, -1.5f
   };
 
   filler2d = vector<float> {
@@ -73,7 +79,7 @@ void Player::makeRacket2d() {
     0.0f, -10.6f, -1.5f,
     0.0f, -10.6f, 1.5f,
     0.0f, -7.5f, 4.0f,
-    0.0f, -7.5f, -4.0f,
+    0.0f, -7.5f, -4.0f
   };
 }
 
@@ -100,7 +106,8 @@ void Player::makeFace2d() {
     0.0f, -5.0f, 6.65f,
     0.0f, -6.5f, 5.45f,
     0.0f, -7.5f, 4.0f,
-    0.0f, -7.5f, -4.0f
+    0.0f, -7.5f, -4.0f,
+    0.0f, -6.5f, -5.45f
   };
 }
 
@@ -121,6 +128,11 @@ void Player::makeRacket3d(float xFront, float xBack) {
   }
   connectSurfaces(racket2d, racketSideVtx, racketSideNom, racketCol, {244.0f/255.0f, 164.0f/255.0f, 96.0f/255.0f, 0.0}, xFront, xBack);
 
+  racketFrontVtxTf = racketFrontVtx;
+  racketBackVtxTf = racketBackVtx;
+  racketFrontNomTf = racketFrontNom;
+  racketSideVtxTf = racketSideVtx;
+  racketSideNomTf = racketSideNom;
 }
 
 void Player::makeHandle3d(float xFront, float xBack) {
@@ -136,9 +148,13 @@ void Player::makeHandle3d(float xFront, float xBack) {
       handleBackVtx.push_back(handle2d[i]);
     }
   }
-
   connectSurfaces(handle2d, handleSideVtx, handleSideNom, handleCol, {139.0f/255.0f, 69.0f/255.0f, 19.0f/255.0f, 0.0}, -0.7, 0.0);
   connectSurfaces(handle2d, handleSideVtx, handleSideNom, handleCol, {139.0f/255.0f, 69.0f/255.0f, 19.0f/255.0f, 0.0}, 0.6, 1.3);
+  handleSideVtxTf = handleSideVtx;
+  handleSideNomTf = handleSideNom;
+  handleFrontVtxTf = handleFrontVtx;
+  handleBackVtxTf = handleBackVtx;
+  handleFrontNomTf = handleFrontNomTf;
 }
 
 void Player::connectSurfaces(vector<float>& vec2d, vector<float>& vtx, vector<float>& nom, vector<float>& col, vector<float> targetCol, float xFront, float xBack) {
@@ -188,6 +204,11 @@ void Player::makeFace3d(float xfront, float xback) {
   }
   faceFrontCol = {1.0f, 0.0f, 0.0f, 0.5f};
   faceBackCol = {0.0f, 0.0f, 0.0f, 0.5f};
+
+  faceFrontVtxTf = faceFrontVtx;
+  faceFrontNomTf = faceFrontNom;
+  faceBackVtxTf = faceBackVtx;
+  faceBackNomTf = faceBackNom;
 }
 
 vector<float> Player::crossProduct(vector<float> vec1, vector<float> vec2) {
@@ -201,6 +222,35 @@ vector<float> Player::crossProduct(vector<float> vec1, vector<float> vec2) {
   norm[1] /= mag;
   norm[2] /= mag;
   return norm;
+}
+
+void Player::translateVector(vector<float>& vec, vector<float>& dest) {
+  for (int i = 0; i < vec.size() - 3; i += 3) {
+    dest[i] = vec[i] + dx;
+    dest[i + 1] = vec[i + 1] + dy;
+    dest[i + 2] = vec[i + 2] + dz;
+  }
+}
+
+void Player::rotateVector(vector<float>& vec, vector<float>& dest) {
+  for (int i = 0; i < vec.size() - 3; i += 3) {
+    float ox = vec[i];
+    float oy = vec[i + 1];
+    float oz = vec[i + 2];
+    dest[i] = ox*cos(ay)*cos(az) - oy*sin(az) + oz*cos(az)*sin(ay);
+    dest[i + 1] = oy*cos(az) + ox*cos(ay)*sin(az) + oz*sin(ay)*sin(az);
+    dest[i + 2] = oz*cos(ay) - ox*sin(ay);
+  }
+}
+
+void Player::mapCoorToAng() {
+  ay = -MAX_Y_ANGLE + ((float)mx/(float)winWid)*2.0f*MAX_Y_ANGLE;
+  az = -MAX_Z_ANGLE + ((float)my/(float)winHei)*2.0f*MAX_Z_ANGLE;
+}
+
+void Player::mapCoorToTrans() {
+  dy = MAX_Y_TRANS - ((float)my/(float)winHei)*2.0f*MAX_Y_TRANS;
+  dz = -MAX_Z_TRANS + ((float)mx/(float)winWid)*2.0f*MAX_Z_TRANS;
 }
 
 void Player::drawPolygon(vector<float>& vtx, vector<float>& nom, vector<float>& col) {
@@ -223,7 +273,7 @@ void Player::drawQuads(vector<float>& vtx, vector<float>& nom, vector<float>& co
   glColorPointer(4, GL_FLOAT, 0, col.data());
   glNormalPointer(GL_FLOAT, 0, nom.data());
   glVertexPointer(3, GL_FLOAT, 0, vtx.data());
-  glDrawArrays(GL_QUADS, 0, vtx.size()/3);
+  glDrawArrays(GL_QUADS, 0, vtx.size()/3 - 1);
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);
   glDisableClientState(GL_COLOR_ARRAY);
@@ -231,23 +281,73 @@ void Player::drawQuads(vector<float>& vtx, vector<float>& nom, vector<float>& co
 
 void Player::draw() {
   // draw surface
-  drawPolygon(faceFrontVtx, faceFrontNom, faceFrontCol);
-  drawPolygon(faceBackVtx, faceBackNom, faceBackCol);
-  drawPolygon(handleFrontVtx, handleFrontNom, handleCol);
-  drawPolygon(handleBackVtx, handleFrontNom, handleCol);
-  drawQuads(racketFrontVtx, racketFrontNom, racketCol);
-  drawQuads(racketBackVtx, racketFrontNom, racketCol);
-  drawQuads(handleSideVtx, handleSideNom, handleCol);
-  drawQuads(racketSideVtx, racketSideNom, racketCol);
+  drawPolygon(faceFrontVtxTf, faceFrontNomTf, faceFrontCol);
+  drawPolygon(faceBackVtxTf, faceBackNomTf, faceBackCol);
+  drawPolygon(handleFrontVtxTf, handleFrontNomTf, handleCol);
+  drawPolygon(handleBackVtxTf, handleFrontNomTf, handleCol);
+  drawQuads(racketFrontVtxTf, racketFrontNomTf, racketCol);
+  drawQuads(racketBackVtxTf, racketFrontNomTf, racketCol);
+  drawQuads(handleSideVtxTf, handleSideNomTf, handleCol);
+  drawQuads(racketSideVtxTf, racketSideNomTf, racketCol);
 }
 
+void Player::getMouseCoor(int x, int y) {
+  if (x < 0) {
+    mx = 0;
+  }
+  else if (x >= winWid - 1) {
+    mx = winWid - 1;
+  }
+  else {
+    mx = x;
+  }
 
-void Player::updateNormal() {
-
+  if (y < 0) {
+    my = 0;
+  }
+  else if (y >= winHei - 1) {
+    my = winHei - 1;
+  }
+  else {
+    my = y;
+  }
 }
 
-void Player::updatePosition(float nx, float ny) {
-  x = nx;
-  y = ny;
+void Player::update(int x, int y) {
+  getMouseCoor(x, y);
+  mapCoorToAng();
+  mapCoorToTrans();
+  rotateVector(faceFrontVtx, faceFrontVtxTf);
+  rotateVector(faceFrontNom, faceFrontNomTf);
+  rotateVector(faceBackVtx, faceBackVtxTf);
+  rotateVector(faceBackNom, faceBackNomTf);
+  rotateVector(handleFrontVtx, handleFrontVtxTf);
+  rotateVector(handleFrontNom, handleFrontNomTf);
+  rotateVector(handleBackVtx, handleBackVtxTf);
+  rotateVector(racketFrontVtx, racketFrontVtxTf);
+  rotateVector(racketFrontNom, racketFrontNomTf);
+  rotateVector(racketBackVtx, racketBackVtxTf);
+  rotateVector(handleSideVtx, handleSideVtxTf);
+  rotateVector(handleSideNom, handleSideNomTf);
+  rotateVector(racketSideVtx, racketSideVtxTf);
+  rotateVector(racketSideNom, racketSideNomTf);
+  translateVector(faceFrontVtxTf, faceFrontVtxTf);
+  translateVector(faceFrontNomTf, faceFrontNomTf);
+  translateVector(faceBackVtxTf, faceBackVtxTf);
+  translateVector(faceBackNomTf, faceBackNomTf);
+  translateVector(handleFrontVtxTf, handleFrontVtxTf);
+  // translateVector(handleFrontNomTf, handleFrontNomTf); will generate seqfault...
+  translateVector(handleBackVtxTf, handleBackVtxTf);
+  translateVector(racketFrontVtxTf, racketFrontVtxTf);
+  translateVector(racketFrontNomTf, racketFrontNomTf);
+  translateVector(racketBackVtxTf, racketBackVtxTf);
+  translateVector(handleSideVtxTf, handleSideVtxTf);
+  translateVector(handleSideNomTf, handleSideNomTf);
+  translateVector(racketSideVtxTf, racketSideVtxTf);
+  translateVector(racketSideNomTf, racketSideNomTf);
 }
 
+void Player::updateWinSize(int wid, int hei) {
+  winWid = wid;
+  winHei = hei;
+}
