@@ -1,9 +1,10 @@
 project(TableTennisGame)
 
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 cmake_minimum_required(VERSION 3.5)
 
-#set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 #############################
 #Dependencies
@@ -17,5 +18,7 @@ cmake_minimum_required(VERSION 3.5)
 #Build Executable
 #############################
 
-add_executable(lclient src/client/client.cpp src/client/linuxClient.cpp src/client/linuxClient.hpp)
-add_executable(lserver src/server/server.cpp src/server/linuxServer.hpp src/server/linuxServer.cpp)
+#add_subdirectory(public/src)
+add_subdirectory(src/client)
+add_subdirectory(src/server)
+#add_subdirectory(utils)
