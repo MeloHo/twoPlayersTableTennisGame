@@ -18,7 +18,7 @@ cmake_minimum_required(VERSION 3.5)
 #Build Executable
 #############################
 
-#add_subdirectory(public/src)
+add_subdirectory(public/src)
 add_subdirectory(src/client)
 add_subdirectory(src/server)
-#add_subdirectory(utils)
+add_subdirectory(utils)

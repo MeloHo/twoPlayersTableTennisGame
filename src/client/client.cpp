@@ -4,6 +4,8 @@
 #include <string>
 #include <stdio.h>
 
+#include "fssimplewindow.h" // For graphics
+
 int main(int argc, char *argv[])
 {
 	if(argc != 3)
