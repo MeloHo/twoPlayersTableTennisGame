@@ -2,19 +2,6 @@
 #include <iostream>
 #include <string>
 #include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <netdb.h>
-#include <sys/uio.h>
-#include <sys/time.h>
-#include <sys/wait.h>
-#include <fcntl.h>
-#include <fstream>
 
 Server::Server(int p)
 {
@@ -85,7 +72,7 @@ int Server::StartServer()
     sockaddr_in newSockAddr1;
     socklen_t newSockAddrSize1 = sizeof(newSockAddr1);
     this->client1Sd = accept(serverSd, (sockaddr *)&newSockAddr1, &newSockAddrSize1);
-    if(this->client2Sd < 0)
+    if(this->client1Sd < 0)
     {
         std::cerr << "Error accepting request from client 1!" << std::endl;
         exit(1);

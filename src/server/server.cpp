@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 
     while(1)
     {
-        if (!server.connected(server.client1Sd) || !server.connected(server.client1Sd)) break;
+        if (!server.connected(server.client1Sd) || !server.connected(server.client2Sd)) break;
         std::cout << "Awaiting client1 response..." << std::endl;
         memset(&msg1, 0, sizeof(msg1));
         bytesRead += recv(server.client1Sd, (char*)&msg1, sizeof(msg1), 0);
