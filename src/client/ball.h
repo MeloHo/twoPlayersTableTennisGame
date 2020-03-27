@@ -9,7 +9,7 @@ This class defines the ball.
 #include <iostream>
 #include <math.h>
 #include "Entity.h"
-#include <fslazywindow.h>
+#include "fssimplewindow.h"
 
 using namespace std;
 

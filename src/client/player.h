@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
-#include <fslazywindow.h>
+#include "fssimplewindow.h"
 #include "Entity.h"
 
 using namespace std;

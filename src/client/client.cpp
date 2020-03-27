@@ -4,6 +4,9 @@
 #include <string>
 #include <stdio.h>
 
+#include "ball.h"
+#include "player.h"
+#include "table.h"
 #include "fssimplewindow.h" // For graphics
 
 int main(int argc, char *argv[])
