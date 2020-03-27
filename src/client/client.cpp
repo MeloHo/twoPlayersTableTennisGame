@@ -9,8 +9,27 @@
 #include "table.h"
 #include "fssimplewindow.h" // For graphics
 
+std::string encodeMessage(const bool& isStarter, const bool& isHiting, const Ball& ball, const Player& player)
+{
+
+}
+
+void updateStates(const char* msg, bool& isStarter, Ball& ball, Player& component)
+{
+
+}
+
 int main(int argc, char *argv[])
 {
+    Ball ball;
+    Player player;
+    Player component;
+    Table table;
+
+    bool isStarter = true;
+    bool terminate = false;
+
+    // Connect to the server
 	if(argc != 3)
     {
         std::cerr << "Usage: ip_address port" << std::endl;
@@ -30,58 +49,70 @@ int main(int argc, char *argv[])
 
 	printf("client connected\n");
 
+    char msg[msgSize];
 
-    int bytesRead, bytesWritten = 0;
+    while(!terminate) {
+        // Get mouse event
+        int key = FsInkey();
+        int leftButton, middleButton, rightButton, locX, locY;
+        int mouseEvent = FsGetMouseEvent(leftButton, middleButton, rightButton, locX, locY);
 
-    struct timeval start1, end1;
+        bool isHiting = false;
 
-    gettimeofday(&start1, NULL);
-
-    char msg[msgSize]; 
-
-    while(1)
-    {
-        if (!client.connected(clientSd)) break;
-
-        std::cout << ">";
-
-        std::string data = client.msgToSend();
-        
-        memset(&msg, 0, sizeof(msg));
-        strcpy(msg, data.c_str());
-
-        if(data == "exit")
-        {
-            send(clientSd, (char*)&msg, strlen(msg), 0);
-            break;
+        if (key == FSKEY_ESC) {
+            terminate = true;
         }
 
-        bytesWritten += send(clientSd, (char*)&msg, strlen(msg), 0);
+        if(isStarter) {
+            player.update(locX, locY);
+            ball.update(locX, locY);
+            if(mouseEvent == FSMOUSEEVENT_LBUTTONDOWN) {
+                float vx = 0.0;
+                float vy = 1.0;
+                float vz = 0.0;
+                ball.update(vx, vy, vz);
+
+                isStarter = false;
+            }
+        }
+        else{
+            player.update(locX, locY);
+            if(mouseEvent == FSMOUSEEVENT_LBUTTONDOWN) {
+                isHiting = true;
+            }
+        }
+        // Encode the message here
+        std::stirng message = encodeMessage(isStarter, isHiting, ball, player);
+
+
+        // ----------------------------------------------------------------------
+        // Send the message to the server and receive the message from the server
+        if (!client.connected(clientSd)){
+            std::cout << "Connection Lost." << std::endl;
+            break;
+        }
+        // Send
+        memset(&msg, 0, sizeof(msg));
+        strcpy(msg, message.c_str());
+
+        // Receive
         std::cout << "Message Sent:" << msg <<"\nAwaiting server response..." << std::endl;
-
         memset(&msg, 0, sizeof(msg));
 
-        bytesRead += recv(clientSd, (char*)&msg, sizeof(msg), 0);
+        // ----------------------------------------------------------------------
 
-        if(!strcmp(msg, "exit"))
-        {
-            std::cout << "Server has quit the session" << std::endl;
-            break;
-        }
+        updateStates(msg, isStarter, ball, component);
 
-        std::cout << "Server: " << msg << std::endl;
+        // Draw
+        ball.draw();
+        player.draw();
+        component.draw();
+        table.draw();
+
+        // Reset
+        isHiting = false;
+
     }
 
-    gettimeofday(&end1, NULL);
-
-	close(clientSd);
-	std::cout << "********Session********" << std::endl;
-    std::cout << "Bytes written: " << bytesWritten << 
-    " Bytes read: " << bytesRead << std::endl;
-    std::cout << "Elapsed time: " << (end1.tv_sec- start1.tv_sec) 
-      << " secs" << std::endl;
-    std::cout << "Connection closed" << std::endl;
-
-	std::cout<< "Session ended\n" << std::endl;
-    return 0;    
+    std::cout << "End of Game." << std::endl;  
 }
