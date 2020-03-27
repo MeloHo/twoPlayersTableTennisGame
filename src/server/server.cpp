@@ -4,6 +4,10 @@
 #include <string>
 #include <stdio.h>
 
+void updateMessage(const char* msg1, const char* msg2, std::string& msg1_reply, std::string& msg2_reply)
+{
+    
+}
 
 
 int main(int argc, char *argv[])
@@ -24,11 +28,6 @@ int main(int argc, char *argv[])
 	int serverSd = server.StartServer();
 
 	printf("server connected to clients\n");
-
-
-    struct timeval start1, end1;
-    gettimeofday(&start1, NULL);
-    int bytesRead, bytesWritten = 0;
 
     //buffer to send and receive messages with
     char msg1[msgSize];
@@ -57,27 +56,17 @@ int main(int argc, char *argv[])
         }
         std::cout << "Client2: " << msg2 << std::endl;
 
-        std::cout << ">";
-        std::string data = server.msgToSend(msg1, msg2);
-        memset(&msg1, 0, sizeof(msg1)); 
+        std::string msg1_reply;
+        std::string msg2_reply;
 
-        strcpy(msg1, data.c_str());
-        std::cout << "Message Sent:" << data << std::endl;
-        bytesWritten += send(server.client1Sd, (char*)&msg1, strlen(msg1), 0);
-        bytesWritten += send(server.client2Sd, (char*)&msg1, strlen(msg1), 0);
+        updateMessage(msg1, msg2, msg1_reply, msg2_reply);
+
+        send(server.client1Sd, (char*)msg1_reply.c_str(), strlen(msg1_reply.c_str()), 0);
+        send(server.client2Sd, (char*)msg2_reply.c_str(), strlen(msg1_reply.c_str()), 0);
+        
     }
-    
-    gettimeofday(&end1, NULL);
-    close(server.client1Sd);
-    close(server.client2Sd);
-
 
     close(serverSd);
-    std::cout << "********Session********" << std::endl;
-    std::cout << "Bytes written: " << bytesWritten << " Bytes read: " << bytesRead << std::endl;
-    std::cout << "Elapsed time: " << (end1.tv_sec - start1.tv_sec) 
-        << " secs" << std::endl;
-    std::cout << "Connection closed..." << std::endl;   
 
 	printf("session ended\n");
 	

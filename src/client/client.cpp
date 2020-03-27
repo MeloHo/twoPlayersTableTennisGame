@@ -113,6 +113,6 @@ int main(int argc, char *argv[])
         isHiting = false;
 
     }
-
+    close(clientSd);
     std::cout << "End of Game." << std::endl;  
 }
