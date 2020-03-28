@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 {
     Ball ball;
     Player player;
-    Player component;
+    Player opponent;
     Table table;
 
     bool isStarter = true;
@@ -101,12 +101,14 @@ int main(int argc, char *argv[])
 
         // ----------------------------------------------------------------------
 
-        updateStates(msg, isStarter, ball, component);
+        updateStates(msg, isStarter, ball, opponent);
 
         // Draw
+        
+
         ball.draw();
         player.draw();
-        component.draw();
+        opponent.draw();
         table.draw();
 
         // Reset
