@@ -8,7 +8,7 @@
 #include "player.h"
 #include "table.h"
 #include "fssimplewindow.h" // For graphics
-#include <ysclass.h>
+#include "ysclass.h"
 
 // std::string encodeMessage(const bool& isStarter, const bool& isHiting, const Ball& ball, const Player& player)
 // {
@@ -25,10 +25,11 @@ int main(int argc, char *argv[])
     FsOpenWindow(0,0,1200,800,1);
 //    Ball ball;
     Player player;
+    Player opponent;
     int wid, hei;
     FsGetWindowSize(wid,hei);
     player.updateWinSize(wid, hei);
-//    Player opponent;
+    opponent.updateWinSize(wid, hei);
 //    Table table;
 
     bool isStarter = true;
@@ -36,7 +37,7 @@ int main(int argc, char *argv[])
 
     YsMatrix4x4 Rc;
     double d = 1.0;
-    YsVec3 t = YsVec3::Origin() + YsVec3 (7.5, 0.0, 1.0);
+    YsVec3 t = YsVec3::Origin() + YsVec3 (0.75, 0.0, 1.0);
     Rc.RotateYZ(YsPi/2.0);
 
     // Connect to the server
@@ -113,6 +114,8 @@ int main(int argc, char *argv[])
 
         // updateStates(msg, isStarter, ball, opponent);
 
+        int oppoX = wid/2, oppoY = hei/2; // decoded from response, this line is just for testing
+        opponent.updateOppo(oppoX, oppoY);
         // Draw
         glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
@@ -120,7 +123,7 @@ int main(int argc, char *argv[])
         glViewport(0,0,wid,hei);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluPerspective(45.0,aspect,d/10.0,d*2.0);
+        gluPerspective(60.0,aspect,d/10.0,10.0);
 
         YsMatrix4x4 globalToCamera=Rc;
         globalToCamera.Invert();
@@ -139,7 +142,7 @@ int main(int argc, char *argv[])
 
         // ball.draw();
         player.draw();
-        // opponent.draw();
+        opponent.draw();
         // table.draw();
         FsSwapBuffers();
         FsSleep(25);

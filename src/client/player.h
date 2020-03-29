@@ -11,8 +11,9 @@
 #define ANGLE_RESOLUTION PI/32.0
 #define MAX_X_ANGLE PI/4.0
 #define MAX_Z_ANGLE PI/4.0
-#define MAX_X_TRANS 0.6
-#define MAX_Z_TRANS 0.4
+#define MAX_X_TRANS 0.9
+#define MAX_Z_TRANS 0.6
+#define OPPONENT_DIST 3.7
 
 using namespace std;
 
@@ -21,8 +22,6 @@ private:
   int winWid, winHei;
   int mx, my;
   float x, y, z;
-  // float dx, dy, dz;
-  // float ay, az;
   vector<float> faceNom;
   vector<float> racket2d, handle2d, face2d, filler2d;
   // original vertices
@@ -50,6 +49,7 @@ private:
   void scaleVector(vector<float>& vtx, float scale);
   vector<float> crossProduct(vector<float> vec1, vector<float> vec2);
   void translateVector(vector<float>& vec, vector<float>& dest, float dx, float dy, float dz);
+  void rotateVectorZ(vector<float>& vec, vector<float>& dest, float az);
   void rotateVectorYZ(vector<float>& vec, vector<float>& dest, float ay, float az);
   vector<float> mapCoorToAng();
   vector<float> mapCoorToTrans();
@@ -63,6 +63,7 @@ public:
   void draw();
   void getMouseCoor(int x, int y);
   void updateWinSize(int wid, int hei);
+  void updateOppo(int omx, int omy);
   void update(int mx, int my);
 };
 

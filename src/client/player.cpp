@@ -1,7 +1,7 @@
 #include "player.h"
 
 Player::Player() {
-  x = 7.5f;
+  x = 0.75f;
   y = 0.0f;
   z = 1.0f;
   makeRacket2d();
@@ -160,7 +160,7 @@ void Player::makeHandle3d(float xFront, float xBack) {
   handleSideNomTf = handleSideNom;
   handleFrontVtxTf = handleFrontVtx;
   handleBackVtxTf = handleBackVtx;
-  handleFrontNomTf = handleFrontNomTf;
+  handleFrontNomTf = handleFrontNom;
 }
 
 void Player::connectSurfaces(vector<float>& vec2d, vector<float>& vtx, vector<float>& nom, vector<float>& col, vector<float> targetCol, float xFront, float xBack) {
@@ -247,15 +247,20 @@ void Player::scaleVector(vector<float>& vtx, float scale) {
   }
 }
 
+void Player::rotateVectorZ(vector<float>& vec, vector<float>& dest, float az) {
+  for (int i = 0; i < vec.size() - 3; i += 3) {
+    float ox = vec[i];
+    float oy = vec[i + 1];
+    float oz = vec[i + 2];
+    dest[i] = ox*cos(az) - oy*sin(az);
+    dest[i + 1] = oy*cos(az) + ox*sin(az);
+    dest[i + 2] = oz;
+  }
+}
+
 void Player::rotateVectorYZ(vector<float>& vec, vector<float>& dest, float ax,
         float az) {
   for (int i = 0; i < vec.size() - 3; i += 3) {
-    // float ox = vec[i];
-    // float oy = vec[i + 1];
-    // float oz = vec[i + 2];
-    // dest[i] = ox*cos(ay)*cos(az) - oy*sin(az) + oz*cos(az)*sin(ay);
-    // dest[i + 1] = oy*cos(az) + ox*cos(ay)*sin(az) + oz*sin(ay)*sin(az);
-    // dest[i + 2] = oz*cos(ay) - ox*sin(ay);
     float ox = vec[i];
     float oy = vec[i + 1];
     float oz = vec[i + 2];
@@ -272,8 +277,8 @@ vector<float> Player::mapCoorToAng() {
 }
 
 vector<float> Player::mapCoorToTrans() {
-  float dx = -MAX_X_TRANS + ((float)mx/(float)winWid)*2.0f*MAX_X_TRANS + x;
-  float dz = MAX_Z_TRANS - ((float)my/(float)winHei)*2.0f*MAX_Z_TRANS + z;
+  float dx = -MAX_X_TRANS + ((float)mx/(float)winWid)*2.0f*MAX_X_TRANS;
+  float dz = MAX_Z_TRANS - ((float)my/(float)winHei)*2.0f*MAX_Z_TRANS;
   return {dx, 0.0f, dz};
 }
 
@@ -341,6 +346,8 @@ void Player::update(int x, int y) {
   getMouseCoor(x, y);
   auto rot = mapCoorToAng();
   auto trans = mapCoorToTrans();
+  trans[0] += this->x;
+  trans[2] += this->z;
   rotateVectorYZ(faceFrontVtx, faceFrontVtxTf, rot[0], rot[1]);
   rotateVectorYZ(faceFrontNom, faceFrontNomTf, rot[0], rot[1]);
   rotateVectorYZ(faceBackVtx, faceBackVtxTf, rot[0], rot[1]);
@@ -356,19 +363,58 @@ void Player::update(int x, int y) {
   rotateVectorYZ(racketSideVtx, racketSideVtxTf, rot[0], rot[1]);
   rotateVectorYZ(racketSideNom, racketSideNomTf, rot[0], rot[1]);
   translateVector(faceFrontVtxTf, faceFrontVtxTf, trans[0], trans[1], trans[2]);
-  translateVector(faceFrontNomTf, faceFrontNomTf, trans[0], trans[1], trans[2]);
   translateVector(faceBackVtxTf, faceBackVtxTf, trans[0], trans[1], trans[2]);
-  translateVector(faceBackNomTf, faceBackNomTf, trans[0], trans[1], trans[2]);
   translateVector(handleFrontVtxTf, handleFrontVtxTf, trans[0], trans[1], trans[2]);
-  // translateVector(handleFrontNomTf, handleFrontNomTf); will generate seqfault...
   translateVector(handleBackVtxTf, handleBackVtxTf, trans[0], trans[1], trans[2]);
   translateVector(racketFrontVtxTf, racketFrontVtxTf, trans[0], trans[1], trans[2]);
-  translateVector(racketFrontNomTf, racketFrontNomTf, trans[0], trans[1], trans[2]);
   translateVector(racketBackVtxTf, racketBackVtxTf, trans[0], trans[1], trans[2]);
   translateVector(handleSideVtxTf, handleSideVtxTf, trans[0], trans[1], trans[2]);
-  translateVector(handleSideNomTf, handleSideNomTf, trans[0], trans[1], trans[2]);
   translateVector(racketSideVtxTf, racketSideVtxTf, trans[0], trans[1], trans[2]);
-  translateVector(racketSideNomTf, racketSideNomTf, trans[0], trans[1], trans[2]);
+}
+
+void Player::updateOppo(int omx, int omy) {
+  getMouseCoor(omx, omy);
+  auto rot = mapCoorToAng();
+  auto trans = mapCoorToTrans();
+  rotateVectorYZ(faceFrontVtx, faceFrontVtxTf, rot[0], rot[1]);
+  rotateVectorYZ(faceFrontNom, faceFrontNomTf, rot[0], rot[1]);
+  rotateVectorYZ(faceBackVtx, faceBackVtxTf, rot[0], rot[1]);
+  rotateVectorYZ(faceBackNom, faceBackNomTf, rot[0], rot[1]);
+  rotateVectorYZ(handleFrontVtx, handleFrontVtxTf, rot[0], rot[1]);
+  rotateVectorYZ(handleFrontNom, handleFrontNomTf, rot[0], rot[1]);
+  rotateVectorYZ(handleBackVtx, handleBackVtxTf, rot[0], rot[1]);
+  rotateVectorYZ(racketFrontVtx, racketFrontVtxTf, rot[0], rot[1]);
+  rotateVectorYZ(racketFrontNom, racketFrontNomTf, rot[0], rot[1]);
+  rotateVectorYZ(racketBackVtx, racketBackVtxTf, rot[0], rot[1]);
+  rotateVectorYZ(handleSideVtx, handleSideVtxTf, rot[0], rot[1]);
+  rotateVectorYZ(handleSideNom, handleSideNomTf, rot[0], rot[1]);
+  rotateVectorYZ(racketSideVtx, racketSideVtxTf, rot[0], rot[1]);
+  rotateVectorYZ(racketSideNom, racketSideNomTf, rot[0], rot[1]);
+  rotateVectorZ(faceFrontVtxTf, faceFrontVtxTf, PI);
+  rotateVectorZ(faceFrontNomTf, faceFrontNomTf, PI);
+  rotateVectorZ(faceBackVtxTf, faceBackVtxTf, PI);
+  rotateVectorZ(faceBackNomTf, faceBackNomTf, PI);
+  rotateVectorZ(handleFrontVtxTf, handleFrontVtxTf, PI);
+  rotateVectorZ(handleFrontNomTf, handleFrontNomTf, PI);
+  rotateVectorZ(handleBackVtxTf, handleBackVtxTf, PI);
+  rotateVectorZ(racketFrontVtxTf, racketFrontVtxTf, PI);
+  rotateVectorZ(racketFrontNomTf, racketFrontNomTf, PI);
+  rotateVectorZ(racketBackVtxTf, racketBackVtxTf, PI);
+  rotateVectorZ(handleSideVtxTf, handleSideVtxTf, PI);
+  rotateVectorZ(handleSideNomTf, handleSideNomTf, PI);
+  rotateVectorZ(racketSideVtxTf, racketSideVtxTf, PI);
+  rotateVectorZ(racketSideNomTf, racketSideNomTf, PI);
+  trans[0] = -trans[0] + x;
+  trans[1] += OPPONENT_DIST;
+  trans[2] += z;
+  translateVector(faceFrontVtxTf, faceFrontVtxTf, trans[0], trans[1], trans[2]);
+  translateVector(faceBackVtxTf, faceBackVtxTf, trans[0], trans[1], trans[2]);
+  translateVector(handleFrontVtxTf, handleFrontVtxTf, trans[0], trans[1], trans[2]);
+  translateVector(handleBackVtxTf, handleBackVtxTf, trans[0], trans[1], trans[2]);
+  translateVector(racketFrontVtxTf, racketFrontVtxTf, trans[0], trans[1], trans[2]);
+  translateVector(racketBackVtxTf, racketBackVtxTf, trans[0], trans[1], trans[2]);
+  translateVector(handleSideVtxTf, handleSideVtxTf, trans[0], trans[1], trans[2]);
+  translateVector(racketSideVtxTf, racketSideVtxTf, trans[0], trans[1], trans[2]);
 }
 
 void Player::updateWinSize(int wid, int hei) {
