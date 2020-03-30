@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
         if (!server.connected(server.client1Sd) || !server.connected(server.client2Sd)) break;
         std::cout << "Awaiting client1 response..." << std::endl;
         memset(&msg1, 0, sizeof(msg1));
-        bytesRead += recv(server.client1Sd, (char*)&msg1, sizeof(msg1), 0);
+        recv(server.client1Sd, (char*)&msg1, sizeof(msg1), 0);
         if(!strcmp(msg1, "exit"))
         {
             std::cout << "Client1 has quit the session" << std::endl;
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
         std::cout << "Awaiting client2 response..." << std::endl;
         memset(&msg2, 0, sizeof(msg2));
-        bytesRead += recv(server.client2Sd, (char*)&msg2, sizeof(msg2), 0);
+        recv(server.client2Sd, (char*)&msg2, sizeof(msg2), 0);
         if(!strcmp(msg2, "exit"))
         {
             std::cout << "Client2 has quit the session" << std::endl;

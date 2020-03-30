@@ -8,6 +8,7 @@ This class defines the ball.
 #include <cstdlib>
 #include <iostream>
 #include <math.h>
+#include <time.h>
 #include "Entity.h"
 #include "fssimplewindow.h"
 
@@ -17,17 +18,27 @@ class Ball: public Entity {
 private:
 	float x, y, z;
 	float vx, vy, vz;
-	float initX, initY, initZ;
-	float R;
-	float g;
-
+	float rad;
+	float grav;
+	bool isActive;
+	bool isHit;
 
 public:
-	Ball(){}
-	Ball(float nx, float ny, float nz);
+    Ball();
+	Ball(float xIn, float yIn, float zIn);
 	~Ball(){}
 	void draw();
 	void update(float nx, float ny, float nz, float nvx, float nvy, float nvz);
+	void GetPosition(float &xOut, float &yOut);
+	void SetPosition(float nx, float ny, float nz);
+	void GetVelocity(float &vxOut, float &vyOut);
+	void SetVelocity(float nvx, float nvy, float nvz);
+	void SetActivity(bool activity);
+
+	bool IsActive();
+	void Move(float dt);
+	void CollisionCheck(float x0, float y0, float z0);
+	void HitCheck(float x0, float y0, float z0, float x1, float y1, float z1);
 };
 
 #endif
