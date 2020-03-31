@@ -93,6 +93,7 @@ int main(int argc, char *argv[])
                 isHiting = true;
             }
         }
+        }
         // Encode the message here
 
         // std::stirng message = encodeMessage(isStarter, isHiting, ball, player);
@@ -143,7 +144,7 @@ int main(int argc, char *argv[])
         glMultMatrixf(modelViewGl);
 
 
-         ball.draw();
+        //ball.draw();
         player.draw();
         opponent.draw();
         table.draw();

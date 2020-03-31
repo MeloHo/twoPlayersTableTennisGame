@@ -47,20 +47,17 @@ void Ball::draw()
 	// 		glVertex3f((float)x + c*r, (float)y + s*r, (float)z + s_z*rad);
 	// 	}
 	// }
-	for(;;){
-		for(int j = 0; j <= 64; ++j){
-			double roll = (double)j * pi / 32.0;
-			double c_z = cos(roll);
-			double s_z = sin(roll);
-			for(int i = 0; i <= 64; ++i){
-				double angle = (double)i * pi / 32.0;
-				double r = c_z * rad;
-				double c = cos(angle);
-				double s = sin(angle);
-				glVertex3d((double)x + c*r, (double)y + s*r, (double)z + s_z*rad);
-			}
+	for(int j = 0; j <= 64; ++j){
+		double roll = (double)j * pi / 32.0;
+		double c_z = cos(roll);
+		double s_z = sin(roll);
+		for(int i = 0; i <= 64; ++i){
+			double angle = (double)i * pi / 32.0;
+			double r = c_z * rad;
+			double c = cos(angle);
+			double s = sin(angle);
+			glVertex3d((double)x + c*r, (double)y + s*r, (double)z + s_z*rad);
 		}
-		FsSwapBuffers();
 	}
 
 	glEnd();
