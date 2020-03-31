@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     FsGetWindowSize(wid,hei);
     player.updateWinSize(wid, hei);
     opponent.updateWinSize(wid, hei);
-//    Table table;
+    Table table(0.7625,1.37,0.5);
 
     bool isStarter = true;
     bool terminate = false;
@@ -143,9 +143,9 @@ int main(int argc, char *argv[])
         // ball.draw();
         player.draw();
         opponent.draw();
-        // table.draw();
+        table.draw();
         FsSwapBuffers();
-        FsSleep(25);
+        FsSleep(50);
         // Reset
         isHiting = false;
 
