@@ -76,6 +76,7 @@ int main(int argc, char *argv[])
 
         if(isStarter) {
             player.update(locX, locY);
+
             // ball.update(locX, locY);
             if(mouseEvent == FSMOUSEEVENT_LBUTTONDOWN) {
                 float vx = 0.0;
@@ -85,7 +86,7 @@ int main(int argc, char *argv[])
 
                 isStarter = false;
             }
-        }
+        
         else{
             player.update(locX, locY);
             if(mouseEvent == FSMOUSEEVENT_LBUTTONDOWN) {
@@ -93,6 +94,7 @@ int main(int argc, char *argv[])
             }
         }
         // Encode the message here
+
         // std::stirng message = encodeMessage(isStarter, isHiting, ball, player);
 
 
@@ -140,7 +142,8 @@ int main(int argc, char *argv[])
         glLoadIdentity();
         glMultMatrixf(modelViewGl);
 
-        // ball.draw();
+
+         ball.draw();
         player.draw();
         opponent.draw();
         table.draw();
