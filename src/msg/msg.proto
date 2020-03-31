@@ -1,0 +1,22 @@
+syntax = "proto2";
+message Msg {
+	required bool isHitting = 1;
+	required int32 playerId = 16;
+	required int32 player1Score = 2;
+	required int32 player2Score = 3;
+
+	//ball state;
+	required float ballX = 4;
+	required float ballY = 5;
+	required float ballZ = 6;
+
+	// player1 state
+	required int32 player1X = 10;
+	required int32 player1Y = 11;
+	required int32 player1Z = 12;
+
+	// player2 state
+	required int32 player2X = 13;
+	required int32 player2Y = 14;
+	required int32 player2Z = 15;
+}

@@ -5,7 +5,7 @@
 
 Server::Server(int p)
 {
-	this->port = p;
+    this->port = p;
 }
 
 std::string Server::msgToSend(char msg1[], char msg2[])
@@ -79,6 +79,14 @@ int Server::StartServer()
     }
     std::cout << "Connected with client 1!" << std::endl;
 
+    // assign player 1
+    char msg[msgSize];
+    memset(&msg, 0, sizeof(msg)); 
+    msg[0] = '0';
+    std::cout << "Player 1 assigned"<< std::endl;
+    send(client1Sd, (char*)&msg, sizeof(msg), 0);
+    sleep(2);
+
     //connext to client 2
     sockaddr_in newSockAddr2;
     socklen_t newSockAddrSize2 = sizeof(newSockAddr2);
@@ -89,6 +97,13 @@ int Server::StartServer()
         exit(1);
     }
     std::cout << "Connected with client 2!" << std::endl;
+
+    // assign player 2
+    memset(&msg, 0, sizeof(msg)); 
+    msg[0] = '1';
+    std::cout << "Player 2 assigned"<< std::endl;
+    send(client2Sd, (char*)&msg, sizeof(msg), 0);
+    sleep(2);
 
     return serverSd;
 }
