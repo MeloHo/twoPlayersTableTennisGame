@@ -20,7 +20,7 @@ private:
 	float vx, vy, vz;
 	float rad;
 	float grav;
-	bool isActive;
+	bool isOut;
 	bool isHit;
 
 public:
@@ -29,9 +29,9 @@ public:
 	~Ball(){}
 	void draw();
 	void update(float nx, float ny, float nz, float nvx, float nvy, float nvz);
-	void GetPosition(float &xOut, float &yOut);
+	void GetPosition(float &xOut, float &yOut, float &zOut);
 	void SetPosition(float nx, float ny, float nz);
-	void GetVelocity(float &vxOut, float &vyOut);
+	void GetVelocity(float &vxOut, float &vyOut, float &vzOut);
 	void SetVelocity(float nvx, float nvy, float nvz);
 	void SetActivity(bool activity);
 

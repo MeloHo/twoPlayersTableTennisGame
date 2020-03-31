@@ -154,6 +154,7 @@ int main(int argc, char *argv[])
 
 
     //*********************************************
+    Ball ball;
 
 
     /* player and opponent */
@@ -345,7 +346,7 @@ int main(int argc, char *argv[])
         glMultMatrixf(modelViewGl);
 
         /* draw stuff */
-        //ball.draw();
+        ball.draw();
         player.draw();
         opponent.draw();
         table.draw();
