@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
           break;
       }
       std::cout << "Bytes Sent: %d"<< bytecount <<"\nAwaiting server response..." << std::endl;
-      delete pkt;
+      delete[] pkt;
       std::cout << "Message Sent!" << std::endl;
 
   }
