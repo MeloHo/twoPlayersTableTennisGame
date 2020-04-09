@@ -348,6 +348,10 @@ void Player::update(int x, int y) {
   auto trans = mapCoorToTrans();
   trans[0] += this->x;
   trans[2] += this->z;
+  xt = this->x + trans[0];
+  yt = this->y;
+  zt = this->z + trans[2];
+
   rotateVectorYZ(faceFrontVtx, faceFrontVtxTf, rot[0], rot[1]);
   rotateVectorYZ(faceFrontNom, faceFrontNomTf, rot[0], rot[1]);
   rotateVectorYZ(faceBackVtx, faceBackVtxTf, rot[0], rot[1]);
@@ -370,6 +374,7 @@ void Player::update(int x, int y) {
   translateVector(racketBackVtxTf, racketBackVtxTf, trans[0], trans[1], trans[2]);
   translateVector(handleSideVtxTf, handleSideVtxTf, trans[0], trans[1], trans[2]);
   translateVector(racketSideVtxTf, racketSideVtxTf, trans[0], trans[1], trans[2]);
+  faceNom = faceFrontNomTf;
 }
 
 void Player::updateOppo(int omx, int omy) {
@@ -420,4 +425,20 @@ void Player::updateOppo(int omx, int omy) {
 void Player::updateWinSize(int wid, int hei) {
   winWid = wid;
   winHei = hei;
+}
+
+float Player::getX() const {
+  return xt;
+}
+
+float Player::getY() const {
+  return yt;
+}
+
+float Player::getZ() const {
+  return zt;
+}
+
+vector<float> Player::getNormal() const {
+  return faceNom;
 }
