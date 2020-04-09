@@ -7,3 +7,4 @@ message(STATUS "protobuf src: " ${PROTO_SRC})
 message(STATUS "protobuf header: " ${PROTO_HEADER}) 
 
 ADD_LIBRARY(msg ${PROTO_HEADER} ${PROTO_SRC})
+

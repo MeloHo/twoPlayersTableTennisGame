@@ -2,20 +2,25 @@
 
 This is a team project for 24783-Advanced Engineering Computation, Spring 2020
 
-# Install Boost
-Ubuntu:
-
-	sudo apt install libboost-dev
-	sudo apt install libboost-all-dev
-	dpkg -s libboost-dev | grep Version
-
 # Install Protobuf
+## Ubuntu:
+
 	sudo apt-get install autoconf automake libtool curl make g++ unzip
 
-# Compile with protobuf
-	protoc --cpp_out=. msg.proto
-	c++ my_program.cc my_proto.pb.cc `pkg-config --cflags --libs protobuf`
+## Mac:
 
+Homebrew:
+
+	brew install protobuf
+
+or from source:
+	
+	sudo mv ~/Downloads/protobuf-3.6.1 /usr/local/bin
+	cd /usr/local/bin/protobuf-3.6.1
+	./configure CC=clang CXX="clang++ -std=c++11 -stdlib=libc++" CXXFLAGS="-O3" --disable-shared
+	make
+	sudo make install
+	protoc --version
 
 # Build
 	mkdir build
@@ -23,4 +28,4 @@ Ubuntu:
 	cmake ../
 	make all
 
-executables are in the bin folder
+executables are in the bin folder under src
