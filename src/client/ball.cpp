@@ -16,7 +16,7 @@ Ball::Ball(float xIn, float yIn, float zIn)
 	x = xIn;
 	y = yIn;
 	z = zIn;
-	rad = 0.02f;
+	rad = 0.05f;
 	vx =0;
 	vy = 0;
 	vz = 0;
@@ -27,8 +27,7 @@ Ball::Ball(float xIn, float yIn, float zIn)
 void Ball::draw()
 {
 	const float pi = 3.14159265;
-
-	glColor3ub(255, 0, 0);
+	glColor3ub(245, 214, 137);
 	glBegin(GL_TRIANGLE_FAN);
 
 	for(int j = 0; j <= 64; ++j){

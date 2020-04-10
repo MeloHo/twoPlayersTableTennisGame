@@ -27,9 +27,9 @@ Player::Player(float nx, float ny, float nz) {
 
 void Player::update(float nx, float ny, float nz)
 {
-  x = nx;
-  y = ny;
-  z = nz;
+  xt = nx;
+  yt = ny;
+  zt = nz;
 }
 
 void Player::makeHandle2d() {

@@ -155,7 +155,8 @@ int main(int argc, char *argv[])
     FsGetWindowSize(wid,hei);
     player.updateWinSize(wid, hei);
     opponent.updateWinSize(wid, hei);
-    Table table(0.7625,1.37,0.5);
+    //Table table(0.7625,1.37,0.5);
+    Table table(0.75, 1.87, 0.5);
 
     YsMatrix4x4 Rc;
     double d = 1.0;
@@ -249,6 +250,8 @@ int main(int argc, char *argv[])
         state.player1X = player.getX();
         state.player1Y = player.getY();
         state.player1Z = player.getZ();
+        state.player2X = locX; // Trick here. Send my 2D coordinate to opponent for him to update my position.
+        state.player2Y = locY;
 
         /* Communicating with server sending/receiving */
         // ----------------------------------------------------------------------
@@ -285,9 +288,9 @@ int main(int argc, char *argv[])
         /* draw self and opponent */
         // update opponent position
 
-        opponent.update(state.player2X, state.player2Y, state.player2Z);
+        opponent.updateOppo(state.player2X, state.player2Y);
         ball.update(state.ballX, state.ballY, state.ballZ);
-        std::cout << "Here Opponent:" << state.player2X << " " << state.player2Y << " " << state.player2Z << std::endl;
+        //std::cout << "Here Opponent:" << state.player2X << " " << state.player2Y << " " << state.player2Z << std::endl;
 
         // Draw
         glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
@@ -318,6 +321,18 @@ int main(int argc, char *argv[])
         player.draw();
         opponent.draw();
         table.draw();
+
+        // glColor3ub(0, 0, 255);
+
+        // glBegin(GL_LINES);
+
+        // for(int i = 0; i < 1000; i += 2) {
+        //     glVertex3f(0.001*i, 1.87, 0);
+        //     glVertex3f(0.001*i, 1.87, 3);
+        // }
+        
+        // glEnd();
+
         FsSwapBuffers();
         FsSleep(10);
 

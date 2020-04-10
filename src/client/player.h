@@ -61,9 +61,6 @@ public:
   Player();
   Player(float nx, float ny, float nz);
   ~Player() {}
-  float getX() const;
-  float getY() const;
-  float getZ() const;
   vector<float> getNormal() const;
 
   void draw();

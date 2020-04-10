@@ -31,7 +31,7 @@
 
 using namespace google::protobuf::io;
 
-const double TIME_INTERVAL = 0.001; // 0.01s
+const double TIME_INTERVAL = 0.005; // 0.005s
 const double GRAVITY = 9.8; // g = 9.8
 
 struct ball
@@ -74,7 +74,7 @@ void readBody(int csock,google::protobuf::uint32 siz, State &state)
 
     coded_input.PopLimit(msgLimit);
 
-    std::cout<<"Message is "<<payload.DebugString();
+    //std::cout<<"Message is "<<payload.DebugString();
 
     std::cout<<"--------------Updating---------------"<<std::endl;
     // update game state for calculating 
@@ -83,6 +83,8 @@ void readBody(int csock,google::protobuf::uint32 siz, State &state)
     state.player1X = payload.player1x();
     state.player1Y = payload.player1y();
     state.player1Z = payload.player1z();
+    state.player2X = payload.player2x();
+    state.player2Y = payload.player2y();
 
     std::cout<<"------------Update Finished!-------------"<<std::endl;
 }
@@ -106,20 +108,22 @@ void recv_msg(int csock, State &state)
 void updateBall(ball& Ball,State& player1State,State& player2State)
 {
   // If Ball hits the table, bounce the ball
-  if(Ball.x >= 0 && Ball.x <= 1.5 && Ball.y >= 0.5 && Ball.y <= 3.24 && Ball.z <= 0.76)
+  if(Ball.x >= 0 && Ball.x <= 1.5 && Ball.y >= 0.5 && Ball.y <= 3.24 && Ball.z <= 0.5)
   {
-    Ball.z = -Ball.z;
+    Ball.vz = -Ball.vz;
   }
   else if(player1State.isHitting && player2State.isHitting){
+    float transformedX = 1.5 - player2State.player1X;
+    float transformedY = 3.74 - player2State.player1Y;
     // Player1 hit the ball
     if(sqrt(pow(Ball.x - player1State.player1X, 2) + pow(Ball.y - player1State.player1Y, 2) + pow(Ball.z - player1State.player1Z, 2)) < 0.1)
     {
-      Ball.y = -Ball.y;
+      Ball.vy = -Ball.vy;
     }
     // Player2 hit the ball
-    else if(sqrt(pow(Ball.x - player2State.player1X, 2) + pow(Ball.y - player2State.player1Y, 2) + pow(Ball.z - player2State.player1Z, 2)) < 0.1)
+    else if(sqrt(pow(Ball.x - transformedX, 2) + pow(Ball.y - transformedY, 2) + pow(Ball.z - player2State.player1Z, 2)) < 0.1)
     {
-      Ball.y = -Ball.y;
+      Ball.vy = -Ball.vy;
     }
   }
 
@@ -134,7 +138,7 @@ void updateBall(ball& Ball,State& player1State,State& player2State)
 void judgeWinner(ball& Ball, bool& isPlayer1Starter, bool& isPlayer2Starter, int& score1, int& score2)
 {
   // The Ball hit the net
-  if(Ball.x >=0 && Ball.x <= 1.5 && Ball.z >= 0.76 && Ball.z <= 0.91 && Ball.y >= 1.86 && Ball.y <= 1.88){
+  if(Ball.x >=0 && Ball.x <= 1.5 && Ball.z >= 0.50 && Ball.z <= 0.65 && Ball.y >= 1.86 && Ball.y <= 1.88){
     if(Ball.vy > 0){
       score2++;
       isPlayer2Starter = true;
@@ -146,7 +150,7 @@ void judgeWinner(ball& Ball, bool& isPlayer1Starter, bool& isPlayer2Starter, int
     return;
   }
   // The ball hits outsize of the table
-  else if(!(Ball.x >= 0 && Ball.x <= 1.5 && Ball.y >= 0.5 && Ball.y <= 3.24) && Ball.z <= 0.76)
+  else if(!(Ball.x >= 0 && Ball.x <= 1.5 && Ball.y >= 0.5 && Ball.y <= 3.24) && Ball.z <= 0.5)
   {
     if(Ball.vy > 0){
       score2++;
@@ -277,13 +281,19 @@ int main(int argc, char *argv[])
 
       if(isPlayer1Starter && !isPlayer2Starter)
       {
+
         Ball.x = player1State.player1X;
         Ball.y = player1State.player1Y;
         Ball.z = player1State.player1Z;
 
+        std::cout << "1 is the Stater." << std::endl;
+        std::cout << "Ball: " << Ball.x << " " << Ball.y << " " << Ball.z <<std::endl;
+        std::cout << "Player1: " << player1State.player1X << " " << player1State.player1Y << " " << player1State.player1Z << std::endl;
+        std::cout << "Player2: " << player2State.player1X << " " << player2State.player1Y << " " << player2State.player1Z << std::endl;
+        
         if(player1State.isHitting) {
           Ball.vx = 0;
-          Ball.vy = 1.0;
+          Ball.vy = 2.0;
           Ball.vz = 0;
 
           isPlayer1Starter = false;
@@ -291,13 +301,22 @@ int main(int argc, char *argv[])
       }
       else if(isPlayer2Starter && !isPlayer1Starter)
       {
-        Ball.x = player2State.player1X;
-        Ball.y = player2State.player1Y;
+        float transformedX = 1.5 - player2State.player1X;
+        float transformedY = 3.74 - player2State.player1Y;
+        Ball.x = transformedX;
+        Ball.y = transformedY;
         Ball.z = player2State.player1Z;
+
+        
+        std::cout << "1 is the Stater." << std::endl;
+        std::cout << "Ball: " << Ball.x << " " << Ball.y << " " << Ball.z <<std::endl;
+        std::cout << "Player1: " << player1State.player1X << " " << player1State.player1Y << " " << player1State.player1Z << std::endl;
+        std::cout << "Player2: " << player2State.player1X << " " << player2State.player1Y << " " << player2State.player1Z << std::endl;
+        
 
         if(player2State.isHitting) {
           Ball.vx = 0;
-          Ball.vy = 1.0;
+          Ball.vy = -2.0;
           Ball.vz = 0;
 
           isPlayer2Starter = false;
@@ -313,11 +332,12 @@ int main(int argc, char *argv[])
       // encode message
 
       // update player1State
+      float temp1 = player1State.player2X, temp2 = player1State.player2Y;
       player1State.player1Score = score1;
       player1State.player2Score = score2;
-      player1State.player2X = player2State.player1X;
-      player1State.player2Y = player2State.player1Y;
-      player1State.player2Z = player2State.player1Z;
+      player1State.player2X = player2State.player2X;
+      player1State.player2Y = player2State.player2Y;
+      player1State.player2Z = 0;
       player1State.ballX = Ball.x;
       player1State.ballY = Ball.y;
       player1State.ballZ = Ball.z;      
@@ -326,11 +346,11 @@ int main(int argc, char *argv[])
       // update player2State
       player2State.player1Score = score2;
       player2State.player2Score = score1;
-      player2State.player2X = player1State.player1X;
-      player2State.player2Y = player1State.player1Y;
-      player2State.player2Z = player1State.player1Z;
-      player2State.ballX = Ball.x;
-      player2State.ballY = Ball.y;
+      player2State.player2X = temp1;
+      player2State.player2Y = temp2;
+      player2State.player2Z = 0;
+      player2State.ballX = 1.5 - Ball.x;
+      player2State.ballY = 3.74 - Ball.y;
       player2State.ballZ = Ball.z;      
       Msg message2 = encodeMessage(player2State);
 
