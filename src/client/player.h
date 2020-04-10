@@ -65,6 +65,10 @@ public:
   void updateWinSize(int wid, int hei);
   void updateOppo(int omx, int omy);
   void update(int mx, int my);
+  void update(float nx ,float ny, float nz);
+  float getX() const;
+  float getY() const;
+  float getZ() const;
 };
 
 #endif

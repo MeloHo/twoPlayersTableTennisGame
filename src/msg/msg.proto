@@ -11,12 +11,12 @@ message Msg {
 	required float ballZ = 6;
 
 	// player1 state
-	required int32 player1X = 10;
-	required int32 player1Y = 11;
-	required int32 player1Z = 12;
+	required float player1X = 10;
+	required float player1Y = 11;
+	required float player1Z = 12;
 
 	// player2 state
-	required int32 player2X = 13;
-	required int32 player2Y = 14;
-	required int32 player2Z = 15;
+	required float player2X = 13;
+	required float player2Y = 14;
+	required float player2Z = 15;
 }

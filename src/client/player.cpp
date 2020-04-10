@@ -25,6 +25,13 @@ Player::Player(float nx, float ny, float nz) {
   makeRacket3d(0.0f, 0.6f);
 }
 
+void Player::update(float nx, float ny, float nz)
+{
+  x = nx;
+  y = ny;
+  z = nz;
+}
+
 void Player::makeHandle2d() {
   handle2d = vector<float> {
     -1.65f, 0.0f, -15.7f,
@@ -420,4 +427,19 @@ void Player::updateOppo(int omx, int omy) {
 void Player::updateWinSize(int wid, int hei) {
   winWid = wid;
   winHei = hei;
+}
+
+float Player::getX() const
+{
+  return this->x;
+}
+
+float Player::getY() const
+{
+  return this->y;
+}
+
+float Player::getZ() const
+{
+  return this->z;
 }

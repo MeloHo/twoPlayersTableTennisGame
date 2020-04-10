@@ -134,15 +134,6 @@ Msg encodeMessage(State state)
     return message;
 }
 
-void updateStates(const char* msg, bool& isStarter, Ball& ball, Player& component)
-{
-    return;
-}
-
-
-
-
-
 int main(int argc, char *argv[])
 {
     FsOpenWindow(0,0,1200,800,1);
@@ -172,7 +163,6 @@ int main(int argc, char *argv[])
     Rc.RotateYZ(YsPi/2.0);
 
     /* some flags */
-    bool isStarter = true;
     bool terminate = false;
     bool start = false; // flag for starting game/ both player connectted
 
@@ -222,28 +212,26 @@ int main(int argc, char *argv[])
 
     /* client state for the purpose of drawing */
     // initialization
-    State state = {
-        0,
-        Iam,
-        1,
-        3,
-        0.0,
-        0.0,
-        0.0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-    };
 
     /* start game loop */
     while(!terminate) {
-        FsPollDevice();
-
+        State state = {
+            false,
+            Iam,
+            0, //player1Score
+            0, //player2Score
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        };
         /* Get mouse event */
-        bool isHiting = false;
+        FsPollDevice();
         int key = FsInkey();
         int leftButton, middleButton, rightButton, locX, locY;
         int mouseEvent = FsGetMouseEvent(leftButton, middleButton, rightButton, locX, locY);
@@ -252,36 +240,16 @@ int main(int argc, char *argv[])
             terminate = true;
         }
 
-        /* set initial state/action */
-        if(isStarter) {
-            player.update(locX, locY);
-            // ball.update(locX, locY);
-            if(mouseEvent == FSMOUSEEVENT_LBUTTONDOWN) {
-                float vx = 0.0;
-                float vy = 1.0;
-                float vz = 0.0;
-                // ball.update(vx, vy, vz);
-
-                isStarter = false;
-            }else{
-                player.update(locX, locY);
-                if(mouseEvent == FSMOUSEEVENT_LBUTTONDOWN) {
-                    isHiting = true;
-                }
-            }
+        if(mouseEvent == FSMOUSEEVENT_LBUTTONDOWN){
+            state.isHitting = true;
         }
 
-        // TODO: add is_hitting flag;
+        player.update(locX, locY);
+        std::cout << "getX:" << player.getX() << " getY:" << player.getY() << " getZ:" << player.getZ() << std::endl; 
+        state.player1X = player.getX();
+        state.player1Y = player.getY();
+        state.player1Z = player.getZ();
 
-        /* update player state */
-        if (Iam == 0){
-            state.player1X = locX;
-            state.player1Y = locY;
-        }else{
-            state.player2X = locX;
-            state.player2Y = locY;
-        }
-        
         /* Communicating with server sending/receiving */
         // ----------------------------------------------------------------------
         // Send the message to the server and receive the message from the server
@@ -308,18 +276,18 @@ int main(int argc, char *argv[])
             break;
         }
         std::cout << "Bytes Sent:"<< bytecount <<"\nAwaiting server response..." << std::endl;
-        delete pkt;
+        delete[] pkt;
 
         /* Reciver */
         recv_msg(clientSd, state);
         // ----------------------------------------------------------------------
 
-        /* draw self and oppenent */
-        //int oppoX = wid/2, oppoY = hei/2; // decoded from response, this line is just for testing
-        // update oppoent position
-        int oppoX = Iam == 1 ? state.player1X: state.player2X;
-        int oppoY = Iam == 1 ? state.player1Y: state.player2Y;
-        opponent.updateOppo(oppoX, oppoY);
+        /* draw self and opponent */
+        // update opponent position
+
+        opponent.update(state.player2X, state.player2Y, state.player2Z);
+        ball.update(state.ballX, state.ballY, state.ballZ);
+        std::cout << "Here Opponent:" << state.player2X << " " << state.player2Y << " " << state.player2Z << std::endl;
 
         // Draw
         glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
@@ -352,11 +320,6 @@ int main(int argc, char *argv[])
         table.draw();
         FsSwapBuffers();
         FsSleep(10);
-        // Reset
-        isHiting = false;
-
-        /* sleep for 0.2 s */
-        //usleep(200000); 
 
     }
 

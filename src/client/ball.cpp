@@ -9,9 +9,6 @@ Ball::Ball()
 	vx =0;
 	vy = 0;
 	vz = 0;
-	grav = -9.8;
-	isOut = false;
-	isHit = false;
 }
 
 Ball::Ball(float xIn, float yIn, float zIn)
@@ -23,56 +20,9 @@ Ball::Ball(float xIn, float yIn, float zIn)
 	vx =0;
 	vy = 0;
 	vz = 0;
-	grav = -9.8;
-	isOut = false;
-	isHit = false;
 }
 
-void Ball::GetPosition(float &xOut, float &yOut, float &zOut)
-{
-	xOut = x;
-	yOut = y;
-	zOut = z;
-}
 
-void Ball::GetVelocity(float &vxOut, float &vyOut, float &vzOut)
-{
-	vxOut = vx;
-	vyOut = vy;
-	vzOut = vz;
-}
-
-void Ball::SetPosition(float xIn, float yIn, float zIn)
-{
-	x = xIn;
-	y = yIn;
-	z = zIn;
-}
-
-void Ball::SetVelocity(float vxIn, float vyIn, float vzIn)
-{
-	vx = vxIn;
-	vy = vyIn;
-	vz = vzIn;
-}
-
-void Ball::Move(float dt)
-{
-	if(z > rad){
-		x += vx * dt;
-		y += vy * dt;
-		z += (vz*dt + 0.5*grav*dt*dt);
-		vz += grav * dt;
-	}
-	else if((z-rad<=0) && (0<=x<=1.75) && (0.5<=y<=3.24)){
-		vz = -1 * vz;
-		z += (vz*dt + 0.5*grav*dt*dt);
-	}
-	// out of table
-	else{
-		isOut = true;
-	}
-}
 
 void Ball::draw()
 {
@@ -97,12 +47,9 @@ void Ball::draw()
 	glEnd();
 }
 
-void Ball::update(float nx, float ny, float nz, float nvx, float nvy, float nvz)
+void Ball::update(float nx, float ny, float nz)
 {
 	x = nx;
 	y = ny;
 	z = nz;
-	vx = nvx;
-	vy = nvy;
-	vz = nvz;
 }

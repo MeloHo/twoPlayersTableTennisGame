@@ -82,9 +82,9 @@ const char descriptor_table_protodef_msg_2eproto[] PROTOBUF_SECTION_VARIABLE(pro
   "\n\010playerId\030\020 \002(\005\022\024\n\014player1Score\030\002 \002(\005\022\024"
   "\n\014player2Score\030\003 \002(\005\022\r\n\005ballX\030\004 \002(\002\022\r\n\005b"
   "allY\030\005 \002(\002\022\r\n\005ballZ\030\006 \002(\002\022\020\n\010player1X\030\n "
-  "\002(\005\022\020\n\010player1Y\030\013 \002(\005\022\020\n\010player1Z\030\014 \002(\005\022"
-  "\020\n\010player2X\030\r \002(\005\022\020\n\010player2Y\030\016 \002(\005\022\020\n\010p"
-  "layer2Z\030\017 \002(\005"
+  "\002(\002\022\020\n\010player1Y\030\013 \002(\002\022\020\n\010player1Z\030\014 \002(\002\022"
+  "\020\n\010player2X\030\r \002(\002\022\020\n\010player2Y\030\016 \002(\002\022\020\n\010p"
+  "layer2Z\030\017 \002(\002"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_msg_2eproto_deps[1] = {
 };
@@ -267,52 +267,52 @@ const char* Msg::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::intern
           ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
-      // required int32 player1X = 10;
+      // required float player1X = 10;
       case 10:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 80)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 85)) {
           _Internal::set_has_player1x(&has_bits);
-          player1x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
-          CHK_(ptr);
+          player1x_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
+          ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
-      // required int32 player1Y = 11;
+      // required float player1Y = 11;
       case 11:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 88)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 93)) {
           _Internal::set_has_player1y(&has_bits);
-          player1y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
-          CHK_(ptr);
+          player1y_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
+          ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
-      // required int32 player1Z = 12;
+      // required float player1Z = 12;
       case 12:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 96)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 101)) {
           _Internal::set_has_player1z(&has_bits);
-          player1z_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
-          CHK_(ptr);
+          player1z_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
+          ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
-      // required int32 player2X = 13;
+      // required float player2X = 13;
       case 13:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 104)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 109)) {
           _Internal::set_has_player2x(&has_bits);
-          player2x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
-          CHK_(ptr);
+          player2x_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
+          ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
-      // required int32 player2Y = 14;
+      // required float player2Y = 14;
       case 14:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 112)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 117)) {
           _Internal::set_has_player2y(&has_bits);
-          player2y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
-          CHK_(ptr);
+          player2y_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
+          ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
-      // required int32 player2Z = 15;
+      // required float player2Z = 15;
       case 15:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 120)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 125)) {
           _Internal::set_has_player2z(&has_bits);
-          player2z_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint(&ptr);
-          CHK_(ptr);
+          player2z_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
+          ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
       // required int32 playerId = 16;
@@ -387,40 +387,40 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(6, this->_internal_ballz(), target);
   }
 
-  // required int32 player1X = 10;
+  // required float player1X = 10;
   if (cached_has_bits & 0x00000040u) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(10, this->_internal_player1x(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(10, this->_internal_player1x(), target);
   }
 
-  // required int32 player1Y = 11;
+  // required float player1Y = 11;
   if (cached_has_bits & 0x00000080u) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(11, this->_internal_player1y(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(11, this->_internal_player1y(), target);
   }
 
-  // required int32 player1Z = 12;
+  // required float player1Z = 12;
   if (cached_has_bits & 0x00000100u) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(12, this->_internal_player1z(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(12, this->_internal_player1z(), target);
   }
 
-  // required int32 player2X = 13;
+  // required float player2X = 13;
   if (cached_has_bits & 0x00000200u) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(13, this->_internal_player2x(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(13, this->_internal_player2x(), target);
   }
 
-  // required int32 player2Y = 14;
+  // required float player2Y = 14;
   if (cached_has_bits & 0x00000800u) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(14, this->_internal_player2y(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(14, this->_internal_player2y(), target);
   }
 
-  // required int32 player2Z = 15;
+  // required float player2Z = 15;
   if (cached_has_bits & 0x00001000u) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(15, this->_internal_player2z(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(15, this->_internal_player2z(), target);
   }
 
   // required int32 playerId = 16;
@@ -476,31 +476,23 @@ size_t Msg::RequiredFieldsByteSizeFallback() const {
   }
 
   if (_internal_has_player1x()) {
-    // required int32 player1X = 10;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_player1x());
+    // required float player1X = 10;
+    total_size += 1 + 4;
   }
 
   if (_internal_has_player1y()) {
-    // required int32 player1Y = 11;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_player1y());
+    // required float player1Y = 11;
+    total_size += 1 + 4;
   }
 
   if (_internal_has_player1z()) {
-    // required int32 player1Z = 12;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_player1z());
+    // required float player1Z = 12;
+    total_size += 1 + 4;
   }
 
   if (_internal_has_player2x()) {
-    // required int32 player2X = 13;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_player2x());
+    // required float player2X = 13;
+    total_size += 1 + 4;
   }
 
   if (_internal_has_playerid()) {
@@ -511,17 +503,13 @@ size_t Msg::RequiredFieldsByteSizeFallback() const {
   }
 
   if (_internal_has_player2y()) {
-    // required int32 player2Y = 14;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_player2y());
+    // required float player2Y = 14;
+    total_size += 1 + 4;
   }
 
   if (_internal_has_player2z()) {
-    // required int32 player2Z = 15;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_player2z());
+    // required float player2Z = 15;
+    total_size += 1 + 4;
   }
 
   return total_size;
@@ -553,40 +541,28 @@ size_t Msg::ByteSizeLong() const {
     // required float ballZ = 6;
     total_size += 1 + 4;
 
-    // required int32 player1X = 10;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_player1x());
+    // required float player1X = 10;
+    total_size += 1 + 4;
 
-    // required int32 player1Y = 11;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_player1y());
+    // required float player1Y = 11;
+    total_size += 1 + 4;
 
-    // required int32 player1Z = 12;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_player1z());
+    // required float player1Z = 12;
+    total_size += 1 + 4;
 
-    // required int32 player2X = 13;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_player2x());
+    // required float player2X = 13;
+    total_size += 1 + 4;
 
     // required int32 playerId = 16;
     total_size += 2 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
         this->_internal_playerid());
 
-    // required int32 player2Y = 14;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_player2y());
+    // required float player2Y = 14;
+    total_size += 1 + 4;
 
-    // required int32 player2Z = 15;
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_player2z());
+    // required float player2Z = 15;
+    total_size += 1 + 4;
 
   } else {
     total_size += RequiredFieldsByteSizeFallback();

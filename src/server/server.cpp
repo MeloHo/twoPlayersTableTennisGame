@@ -14,7 +14,8 @@
 #include <sys/time.h>
 #include <sys/wait.h>
 #include <fcntl.h>
-#include <fstream> 
+#include <fstream>
+#include <cmath>
 
 #include "linuxServer.hpp"
 #include "../msg/state.h"
@@ -29,6 +30,15 @@
 #include <google/protobuf/io/coded_stream.h>
 
 using namespace google::protobuf::io;
+
+const double TIME_INTERVAL = 0.001; // 0.01s
+const double GRAVITY = 9.8; // g = 9.8
+
+struct ball
+{
+  float x, y, z;
+  float vx, vy, vz;
+};
 
 google::protobuf::uint32 readHdr(char *buf)
 {
@@ -68,16 +78,11 @@ void readBody(int csock,google::protobuf::uint32 siz, State &state)
 
     std::cout<<"--------------Updating---------------"<<std::endl;
     // update game state for calculating 
-    if (payload.playerid() == 0)
-    {
-      state.player1X = payload.player1x();
-      state.player1Y = payload.player1y();
-      state.player1Z = payload.player1z();
-    }else{
-      state.player2X = payload.player2x();
-      state.player2Y = payload.player2y();
-      state.player2Z = payload.player2z();
-    }
+
+    state.isHitting = payload.ishitting();
+    state.player1X = payload.player1x();
+    state.player1Y = payload.player1y();
+    state.player1Z = payload.player1z();
 
     std::cout<<"------------Update Finished!-------------"<<std::endl;
 }
@@ -95,8 +100,64 @@ void recv_msg(int csock, State &state)
     }else if (bytecount == 0)
         printf(" Byte read 0\n");
 
-    //std::cout<<"First read byte count is "<<bytecount<<std::endl;
     readBody(csock, readHdr(buffer), state);
+}
+
+void updateBall(ball& Ball,State& player1State,State& player2State)
+{
+  // If Ball hits the table, bounce the ball
+  if(Ball.x >= 0 && Ball.x <= 1.5 && Ball.y >= 0.5 && Ball.y <= 3.24 && Ball.z <= 0.76)
+  {
+    Ball.z = -Ball.z;
+  }
+  else if(player1State.isHitting && player2State.isHitting){
+    // Player1 hit the ball
+    if(sqrt(pow(Ball.x - player1State.player1X, 2) + pow(Ball.y - player1State.player1Y, 2) + pow(Ball.z - player1State.player1Z, 2)) < 0.1)
+    {
+      Ball.y = -Ball.y;
+    }
+    // Player2 hit the ball
+    else if(sqrt(pow(Ball.x - player2State.player1X, 2) + pow(Ball.y - player2State.player1Y, 2) + pow(Ball.z - player2State.player1Z, 2)) < 0.1)
+    {
+      Ball.y = -Ball.y;
+    }
+  }
+
+  //Update the postion of Ball based on its velocity
+  Ball.x += TIME_INTERVAL * Ball.vx;
+  Ball.y += TIME_INTERVAL * Ball.vy;
+  Ball.vz -= TIME_INTERVAL * GRAVITY;
+  Ball.z += TIME_INTERVAL * Ball.vz;
+
+}
+
+void judgeWinner(ball& Ball, bool& isPlayer1Starter, bool& isPlayer2Starter, int& score1, int& score2)
+{
+  // The Ball hit the net
+  if(Ball.x >=0 && Ball.x <= 1.5 && Ball.z >= 0.76 && Ball.z <= 0.91 && Ball.y >= 1.86 && Ball.y <= 1.88){
+    if(Ball.vy > 0){
+      score2++;
+      isPlayer2Starter = true;
+    }
+    else{
+      score1++;
+      isPlayer1Starter = true;
+    }
+    return;
+  }
+  // The ball hits outsize of the table
+  else if(!(Ball.x >= 0 && Ball.x <= 1.5 && Ball.y >= 0.5 && Ball.y <= 3.24) && Ball.z <= 0.76)
+  {
+    if(Ball.vy > 0){
+      score2++;
+      isPlayer2Starter = true;
+    }
+    else{
+      score1++;
+      isPlayer1Starter = true;
+    }
+    return;
+  }
 }
 
 
@@ -126,20 +187,22 @@ Msg encodeMessage(State state)
 
 
 
+
 int main(int argc, char *argv[])
 {
-    // Create Server 
-    if(argc != 2)
-    {
-        std::cerr << "Usage: port" << std::endl;
-        exit(0);
-    }
+
+  // Create Server 
+  if(argc != 2)
+  {
+      std::cerr << "Usage: port" << std::endl;
+      exit(0);
+  }
   int port = atoi(argv[1]);
 
-    Server server(port);
-    printf("server created \n");
-    int serverSd = server.StartServer();
-    printf("server connected to both clients\n");
+  Server server(port);
+  printf("server created \n");
+  int serverSd = server.StartServer();
+  printf("server connected to both clients\n");
 
   //buffer to send and receive messages with
   char msg1[msgSize];
@@ -154,21 +217,50 @@ int main(int argc, char *argv[])
 
   // server state for calculating
   // initialization
-  State state = {
+
+  bool isPlayer1Starter = true;
+  bool isPlayer2Starter = false;
+  int score1 = 0, score2 = 0;
+  ball Ball;
+  Ball.x = 0.0;
+  Ball.y = 0.0;
+  Ball.z = 0.0;
+  Ball.vx = 0.0;
+  Ball.vy = 0.0;
+  Ball.vz = 0.0;
+
+  State player1State = {
+      false,
       0,
-      -1,
-      1,
-      3,
+      0,
+      0,
       0.0,
       0.0,
       0.0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
   };
+
+  State player2State = {
+      false,
+      0,
+      0,
+      0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+  };
+
 
   while(true)
   {
@@ -176,48 +268,109 @@ int main(int argc, char *argv[])
 
       // get both clients response
       std::cout << "Awaiting client1 response..." << std::endl;
-      recv_msg(server.client1Sd, state);
+      recv_msg(server.client1Sd, player1State);
       std::cout << "Awaiting client2 response..." << std::endl;
-      recv_msg(server.client2Sd, state);
+      recv_msg(server.client2Sd, player2State);
 
       // some processing 
       //+++++++++++++++++++++++++++++
 
+      if(isPlayer1Starter && !isPlayer2Starter)
+      {
+        Ball.x = player1State.player1X;
+        Ball.y = player1State.player1Y;
+        Ball.z = player1State.player1Z;
 
+        if(player1State.isHitting) {
+          Ball.vx = 0;
+          Ball.vy = 1.0;
+          Ball.vz = 0;
 
+          isPlayer1Starter = false;
+        }
+      }
+      else if(isPlayer2Starter && !isPlayer1Starter)
+      {
+        Ball.x = player2State.player1X;
+        Ball.y = player2State.player1Y;
+        Ball.z = player2State.player1Z;
+
+        if(player2State.isHitting) {
+          Ball.vx = 0;
+          Ball.vy = 1.0;
+          Ball.vz = 0;
+
+          isPlayer2Starter = false;
+        }
+      }
+      else{
+        updateBall(Ball, player1State, player2State);
+        judgeWinner(Ball, isPlayer1Starter, isPlayer2Starter, score1, score2);
+      }
 
       //+++++++++++++++++++++++++++++
 
       // encode message
-      Msg message = encodeMessage(state);
-      std::cout<<"size after serializing is "<<message.ByteSize()<<std::endl;
-      int siz = message.ByteSize()+4;
-      char *pkt = new char[siz];
 
-      // serialize
-      google::protobuf::io::ArrayOutputStream aos(pkt, siz);
-      CodedOutputStream *coded_output = new CodedOutputStream(&aos);
-      coded_output->WriteVarint32(message.ByteSize());
-      message.SerializeToCodedStream(coded_output);
+      // update player1State
+      player1State.player1Score = score1;
+      player1State.player2Score = score2;
+      player1State.player2X = player2State.player1X;
+      player1State.player2Y = player2State.player1Y;
+      player1State.player2Z = player2State.player1Z;
+      player1State.ballX = Ball.x;
+      player1State.ballY = Ball.y;
+      player1State.ballZ = Ball.z;      
+      Msg message1 = encodeMessage(player1State);
 
-      // send the package
-      if (bytecount = send(server.client1Sd, (void*)pkt, siz, 0) == -1){
+      // update player2State
+      player2State.player1Score = score2;
+      player2State.player2Score = score1;
+      player2State.player2X = player1State.player1X;
+      player2State.player2Y = player1State.player1Y;
+      player2State.player2Z = player1State.player1Z;
+      player2State.ballX = Ball.x;
+      player2State.ballY = Ball.y;
+      player2State.ballZ = Ball.z;      
+      Msg message2 = encodeMessage(player2State);
+
+      // Send message1
+      int siz1 = message1.ByteSize()+4;
+      char *pkt1 = new char[siz1];
+
+      google::protobuf::io::ArrayOutputStream aos1(pkt1, siz1);
+      CodedOutputStream *coded_output1 = new CodedOutputStream(&aos1);
+      coded_output1->WriteVarint32(message1.ByteSize());
+      message1.SerializeToCodedStream(coded_output1);
+
+      if (bytecount = send(server.client1Sd, (void*)pkt1, siz1, 0) == -1){
           printf("error sending data to client1\n");
           break;
       }
-      if (bytecount = send(server.client2Sd, (void*)pkt, siz, 0) == -1){
-          printf("error sending data to client1\n");
+
+      // Send message2
+      int siz2 = message2.ByteSize()+4;
+      char *pkt2 = new char[siz2];
+
+      google::protobuf::io::ArrayOutputStream aos2(pkt2, siz2);
+      CodedOutputStream *coded_output2 = new CodedOutputStream(&aos2);
+      coded_output2->WriteVarint32(message2.ByteSize());
+      message2.SerializeToCodedStream(coded_output2);
+
+      if (bytecount = send(server.client2Sd, (void*)pkt2, siz2, 0) == -1){
+          printf("error sending data to client2\n");
           break;
       }
-      std::cout << "Bytes Sent: %d"<< bytecount <<"\nAwaiting server response..." << std::endl;
-      delete[] pkt;
+
+      delete[] pkt1;
+      delete[] pkt2;
       std::cout << "Message Sent!" << std::endl;
 
   }
 
   close(serverSd);
 
-    printf("session ended\n");
+  printf("session ended\n");
     
-    return 0;
+  return 0;
 }

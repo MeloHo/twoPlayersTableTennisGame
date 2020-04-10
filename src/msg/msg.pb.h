@@ -268,56 +268,56 @@ class Msg :
   void _internal_set_ballz(float value);
   public:
 
-  // required int32 player1X = 10;
+  // required float player1X = 10;
   bool has_player1x() const;
   private:
   bool _internal_has_player1x() const;
   public:
   void clear_player1x();
-  ::PROTOBUF_NAMESPACE_ID::int32 player1x() const;
-  void set_player1x(::PROTOBUF_NAMESPACE_ID::int32 value);
+  float player1x() const;
+  void set_player1x(float value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_player1x() const;
-  void _internal_set_player1x(::PROTOBUF_NAMESPACE_ID::int32 value);
+  float _internal_player1x() const;
+  void _internal_set_player1x(float value);
   public:
 
-  // required int32 player1Y = 11;
+  // required float player1Y = 11;
   bool has_player1y() const;
   private:
   bool _internal_has_player1y() const;
   public:
   void clear_player1y();
-  ::PROTOBUF_NAMESPACE_ID::int32 player1y() const;
-  void set_player1y(::PROTOBUF_NAMESPACE_ID::int32 value);
+  float player1y() const;
+  void set_player1y(float value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_player1y() const;
-  void _internal_set_player1y(::PROTOBUF_NAMESPACE_ID::int32 value);
+  float _internal_player1y() const;
+  void _internal_set_player1y(float value);
   public:
 
-  // required int32 player1Z = 12;
+  // required float player1Z = 12;
   bool has_player1z() const;
   private:
   bool _internal_has_player1z() const;
   public:
   void clear_player1z();
-  ::PROTOBUF_NAMESPACE_ID::int32 player1z() const;
-  void set_player1z(::PROTOBUF_NAMESPACE_ID::int32 value);
+  float player1z() const;
+  void set_player1z(float value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_player1z() const;
-  void _internal_set_player1z(::PROTOBUF_NAMESPACE_ID::int32 value);
+  float _internal_player1z() const;
+  void _internal_set_player1z(float value);
   public:
 
-  // required int32 player2X = 13;
+  // required float player2X = 13;
   bool has_player2x() const;
   private:
   bool _internal_has_player2x() const;
   public:
   void clear_player2x();
-  ::PROTOBUF_NAMESPACE_ID::int32 player2x() const;
-  void set_player2x(::PROTOBUF_NAMESPACE_ID::int32 value);
+  float player2x() const;
+  void set_player2x(float value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_player2x() const;
-  void _internal_set_player2x(::PROTOBUF_NAMESPACE_ID::int32 value);
+  float _internal_player2x() const;
+  void _internal_set_player2x(float value);
   public:
 
   // required int32 playerId = 16;
@@ -333,30 +333,30 @@ class Msg :
   void _internal_set_playerid(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // required int32 player2Y = 14;
+  // required float player2Y = 14;
   bool has_player2y() const;
   private:
   bool _internal_has_player2y() const;
   public:
   void clear_player2y();
-  ::PROTOBUF_NAMESPACE_ID::int32 player2y() const;
-  void set_player2y(::PROTOBUF_NAMESPACE_ID::int32 value);
+  float player2y() const;
+  void set_player2y(float value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_player2y() const;
-  void _internal_set_player2y(::PROTOBUF_NAMESPACE_ID::int32 value);
+  float _internal_player2y() const;
+  void _internal_set_player2y(float value);
   public:
 
-  // required int32 player2Z = 15;
+  // required float player2Z = 15;
   bool has_player2z() const;
   private:
   bool _internal_has_player2z() const;
   public:
   void clear_player2z();
-  ::PROTOBUF_NAMESPACE_ID::int32 player2z() const;
-  void set_player2z(::PROTOBUF_NAMESPACE_ID::int32 value);
+  float player2z() const;
+  void set_player2z(float value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_player2z() const;
-  void _internal_set_player2z(::PROTOBUF_NAMESPACE_ID::int32 value);
+  float _internal_player2z() const;
+  void _internal_set_player2z(float value);
   public:
 
   // @@protoc_insertion_point(class_scope:Msg)
@@ -375,13 +375,13 @@ class Msg :
   float ballx_;
   float bally_;
   float ballz_;
-  ::PROTOBUF_NAMESPACE_ID::int32 player1x_;
-  ::PROTOBUF_NAMESPACE_ID::int32 player1y_;
-  ::PROTOBUF_NAMESPACE_ID::int32 player1z_;
-  ::PROTOBUF_NAMESPACE_ID::int32 player2x_;
+  float player1x_;
+  float player1y_;
+  float player1z_;
+  float player2x_;
   ::PROTOBUF_NAMESPACE_ID::int32 playerid_;
-  ::PROTOBUF_NAMESPACE_ID::int32 player2y_;
-  ::PROTOBUF_NAMESPACE_ID::int32 player2z_;
+  float player2y_;
+  float player2z_;
   friend struct ::TableStruct_msg_2eproto;
 };
 // ===================================================================
@@ -591,7 +591,7 @@ inline void Msg::set_ballz(float value) {
   // @@protoc_insertion_point(field_set:Msg.ballZ)
 }
 
-// required int32 player1X = 10;
+// required float player1X = 10;
 inline bool Msg::_internal_has_player1x() const {
   bool value = (_has_bits_[0] & 0x00000040u) != 0;
   return value;
@@ -603,23 +603,23 @@ inline void Msg::clear_player1x() {
   player1x_ = 0;
   _has_bits_[0] &= ~0x00000040u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Msg::_internal_player1x() const {
+inline float Msg::_internal_player1x() const {
   return player1x_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Msg::player1x() const {
+inline float Msg::player1x() const {
   // @@protoc_insertion_point(field_get:Msg.player1X)
   return _internal_player1x();
 }
-inline void Msg::_internal_set_player1x(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Msg::_internal_set_player1x(float value) {
   _has_bits_[0] |= 0x00000040u;
   player1x_ = value;
 }
-inline void Msg::set_player1x(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Msg::set_player1x(float value) {
   _internal_set_player1x(value);
   // @@protoc_insertion_point(field_set:Msg.player1X)
 }
 
-// required int32 player1Y = 11;
+// required float player1Y = 11;
 inline bool Msg::_internal_has_player1y() const {
   bool value = (_has_bits_[0] & 0x00000080u) != 0;
   return value;
@@ -631,23 +631,23 @@ inline void Msg::clear_player1y() {
   player1y_ = 0;
   _has_bits_[0] &= ~0x00000080u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Msg::_internal_player1y() const {
+inline float Msg::_internal_player1y() const {
   return player1y_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Msg::player1y() const {
+inline float Msg::player1y() const {
   // @@protoc_insertion_point(field_get:Msg.player1Y)
   return _internal_player1y();
 }
-inline void Msg::_internal_set_player1y(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Msg::_internal_set_player1y(float value) {
   _has_bits_[0] |= 0x00000080u;
   player1y_ = value;
 }
-inline void Msg::set_player1y(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Msg::set_player1y(float value) {
   _internal_set_player1y(value);
   // @@protoc_insertion_point(field_set:Msg.player1Y)
 }
 
-// required int32 player1Z = 12;
+// required float player1Z = 12;
 inline bool Msg::_internal_has_player1z() const {
   bool value = (_has_bits_[0] & 0x00000100u) != 0;
   return value;
@@ -659,23 +659,23 @@ inline void Msg::clear_player1z() {
   player1z_ = 0;
   _has_bits_[0] &= ~0x00000100u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Msg::_internal_player1z() const {
+inline float Msg::_internal_player1z() const {
   return player1z_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Msg::player1z() const {
+inline float Msg::player1z() const {
   // @@protoc_insertion_point(field_get:Msg.player1Z)
   return _internal_player1z();
 }
-inline void Msg::_internal_set_player1z(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Msg::_internal_set_player1z(float value) {
   _has_bits_[0] |= 0x00000100u;
   player1z_ = value;
 }
-inline void Msg::set_player1z(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Msg::set_player1z(float value) {
   _internal_set_player1z(value);
   // @@protoc_insertion_point(field_set:Msg.player1Z)
 }
 
-// required int32 player2X = 13;
+// required float player2X = 13;
 inline bool Msg::_internal_has_player2x() const {
   bool value = (_has_bits_[0] & 0x00000200u) != 0;
   return value;
@@ -687,23 +687,23 @@ inline void Msg::clear_player2x() {
   player2x_ = 0;
   _has_bits_[0] &= ~0x00000200u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Msg::_internal_player2x() const {
+inline float Msg::_internal_player2x() const {
   return player2x_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Msg::player2x() const {
+inline float Msg::player2x() const {
   // @@protoc_insertion_point(field_get:Msg.player2X)
   return _internal_player2x();
 }
-inline void Msg::_internal_set_player2x(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Msg::_internal_set_player2x(float value) {
   _has_bits_[0] |= 0x00000200u;
   player2x_ = value;
 }
-inline void Msg::set_player2x(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Msg::set_player2x(float value) {
   _internal_set_player2x(value);
   // @@protoc_insertion_point(field_set:Msg.player2X)
 }
 
-// required int32 player2Y = 14;
+// required float player2Y = 14;
 inline bool Msg::_internal_has_player2y() const {
   bool value = (_has_bits_[0] & 0x00000800u) != 0;
   return value;
@@ -715,23 +715,23 @@ inline void Msg::clear_player2y() {
   player2y_ = 0;
   _has_bits_[0] &= ~0x00000800u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Msg::_internal_player2y() const {
+inline float Msg::_internal_player2y() const {
   return player2y_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Msg::player2y() const {
+inline float Msg::player2y() const {
   // @@protoc_insertion_point(field_get:Msg.player2Y)
   return _internal_player2y();
 }
-inline void Msg::_internal_set_player2y(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Msg::_internal_set_player2y(float value) {
   _has_bits_[0] |= 0x00000800u;
   player2y_ = value;
 }
-inline void Msg::set_player2y(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Msg::set_player2y(float value) {
   _internal_set_player2y(value);
   // @@protoc_insertion_point(field_set:Msg.player2Y)
 }
 
-// required int32 player2Z = 15;
+// required float player2Z = 15;
 inline bool Msg::_internal_has_player2z() const {
   bool value = (_has_bits_[0] & 0x00001000u) != 0;
   return value;
@@ -743,18 +743,18 @@ inline void Msg::clear_player2z() {
   player2z_ = 0;
   _has_bits_[0] &= ~0x00001000u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Msg::_internal_player2z() const {
+inline float Msg::_internal_player2z() const {
   return player2z_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 Msg::player2z() const {
+inline float Msg::player2z() const {
   // @@protoc_insertion_point(field_get:Msg.player2Z)
   return _internal_player2z();
 }
-inline void Msg::_internal_set_player2z(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Msg::_internal_set_player2z(float value) {
   _has_bits_[0] |= 0x00001000u;
   player2z_ = value;
 }
-inline void Msg::set_player2z(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void Msg::set_player2z(float value) {
   _internal_set_player2z(value);
   // @@protoc_insertion_point(field_set:Msg.player2Z)
 }
