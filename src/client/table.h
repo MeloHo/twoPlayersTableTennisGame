@@ -90,6 +90,10 @@ public:
     Table(float nx, float ny, float nz);
     ~Table() {}
     void draw();
+    float getX() const;
+    float getY() const;
+    float getZ() const;
+    vector<float> getNormal() const;
 };
 
 #endif

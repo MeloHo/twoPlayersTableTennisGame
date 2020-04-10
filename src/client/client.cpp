@@ -155,8 +155,10 @@ int main(int argc, char *argv[])
     FsGetWindowSize(wid,hei);
     player.updateWinSize(wid, hei);
     opponent.updateWinSize(wid, hei);
+
     //Table table(0.7625,1.37,0.5);
     Table table(0.75, 1.87, 0.5);
+
 
     YsMatrix4x4 Rc;
     double d = 1.0;
