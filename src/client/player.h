@@ -22,6 +22,7 @@ private:
   int winWid, winHei;
   int mx, my;
   float x, y, z;
+  float xt, yt, zt;
   vector<float> faceNom;
   vector<float> racket2d, handle2d, face2d, filler2d;
   // original vertices
@@ -60,6 +61,11 @@ public:
   Player();
   Player(float nx, float ny, float nz);
   ~Player() {}
+  float getX() const;
+  float getY() const;
+  float getZ() const;
+  vector<float> getNormal() const;
+
   void draw();
   void getMouseCoor(int x, int y);
   void updateWinSize(int wid, int hei);
