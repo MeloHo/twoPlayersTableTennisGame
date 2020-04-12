@@ -353,11 +353,11 @@ void Player::update(int x, int y) {
   getMouseCoor(x, y);
   auto rot = mapCoorToAng();
   auto trans = mapCoorToTrans();
-  trans[0] += this->x;
-  trans[2] += this->z;
   xt = this->x + trans[0];
   yt = this->y;
   zt = this->z + trans[2];
+  trans[0] += this->x;
+  trans[2] += this->z;
 
   rotateVectorYZ(faceFrontVtx, faceFrontVtxTf, rot[0], rot[1]);
   rotateVectorYZ(faceFrontNom, faceFrontNomTf, rot[0], rot[1]);
