@@ -102,7 +102,9 @@ void Table::makeSurfacePnts() {
         {  0.7625f, -1.37,  -0.05f }
     };
 
-    faceNormal = vector<float> { 0.0, 0.0, 1.0 };
+    faceNormal[0] = 0.0;
+    faceNormal[1] = 0.0;
+    faceNormal[2] = 1.0;
 }
 
 void Table::makeSurfacePl() {
@@ -671,17 +673,7 @@ void Table::drawLines(vector<vector<float>> vtx, vector<int> col) {
     glEnd();
 }
 
-float getX() const {
-    return x;
-}
 
-float getY() const {
-    return y;
-}
-
-float getZ() const {
-    return z;
-}
 
 void Table::draw() {
     // draw surface

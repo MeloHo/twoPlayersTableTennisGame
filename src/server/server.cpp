@@ -31,7 +31,7 @@
 
 using namespace google::protobuf::io;
 
-const double TIME_INTERVAL = 0.005; // 0.005s
+const double TIME_INTERVAL = 0.005; // 0.001s
 const double GRAVITY = 9.8; // g = 9.8
 
 struct ball
@@ -105,27 +105,73 @@ void recv_msg(int csock, State &state)
     readBody(csock, readHdr(buffer), state);
 }
 
-void updateBall(ball& Ball,State& player1State,State& player2State)
+void updateBall(ball& Ball,State& player1State,State& player2State,int& ball_hit_left_table,int& ball_hit_right_table,int& starter_this_round)
 {
   // If Ball hits the table, bounce the ball
   if(Ball.x >= 0 && Ball.x <= 1.5 && Ball.y >= 0.5 && Ball.y <= 3.24 && Ball.z <= 0.5)
   {
     Ball.vz = -Ball.vz;
+    if(Ball.y <= 1.87) {
+      ball_hit_left_table += 1;
+    }
+    else{
+      ball_hit_right_table += 1;
+    }
   }
-  else if(player1State.isHitting && player2State.isHitting){
+  else {
     float transformedX = 1.5 - player2State.player1X;
     float transformedY = 3.74 - player2State.player1Y;
     // Player1 hit the ball
-    if(sqrt(pow(Ball.x - player1State.player1X, 2) + pow(Ball.y - player1State.player1Y, 2) + pow(Ball.z - player1State.player1Z, 2)) < 0.1)
+    if(sqrt(pow(Ball.x - player1State.player1X, 2) + pow(Ball.y - player1State.player1Y, 2) + pow(Ball.z - player1State.player1Z, 2)) < 0.5 && Ball.vy < 0)
     {
-      Ball.vy = -Ball.vy;
+      if(starter_this_round == 2){
+        if(player1State.isHitting){
+          Ball.vy = -1.8 * Ball.vy;
+        }
+        else{
+          Ball.vy = -1.5 *Ball.vy;
+        }
+        starter_this_round = 0;
+      }
+      else{
+        if(player1State.isHitting){
+          Ball.vy = -1.1 * Ball.vy;
+        }
+        else{
+          Ball.vy = -1.0 *Ball.vy;
+        }
+      }
+      
+      // Clear the count for hit left/right side table
+      ball_hit_left_table = 0;
+      ball_hit_right_table = 0;
     }
     // Player2 hit the ball
-    else if(sqrt(pow(Ball.x - transformedX, 2) + pow(Ball.y - transformedY, 2) + pow(Ball.z - player2State.player1Z, 2)) < 0.1)
+    else if(sqrt(pow(Ball.x - transformedX, 2) + pow(Ball.y - transformedY, 2) + pow(Ball.z - player2State.player1Z, 2)) < 0.5 && Ball.vy > 0)
     {
-      Ball.vy = -Ball.vy;
+      if(starter_this_round == 1){
+        if(player2State.isHitting){
+          Ball.vy = -1.8 * Ball.vy;
+        }
+        else{
+          Ball.vy = -1.5 *Ball.vy;
+        }
+        starter_this_round = 0;
+      }
+      else{
+        if(player2State.isHitting){
+          Ball.vy = -1.1 * Ball.vy;
+        }
+        else{
+          Ball.vy = -1.0 *Ball.vy;
+        }
+      }
+      // Clear the count for hit left/right side table
+      ball_hit_left_table = 0;
+      ball_hit_right_table = 0;
     }
   }
+  
 
   //Update the postion of Ball based on its velocity
   Ball.x += TIME_INTERVAL * Ball.vx;
@@ -135,7 +181,8 @@ void updateBall(ball& Ball,State& player1State,State& player2State)
 
 }
 
-void judgeWinner(ball& Ball, bool& isPlayer1Starter, bool& isPlayer2Starter, int& score1, int& score2)
+void judgeWinner(ball& Ball, bool& isPlayer1Starter, 
+  bool& isPlayer2Starter, int& score1, int& score2, int& ball_hit_left_table, int& ball_hit_right_table, int& starter_this_round)
 {
   // The Ball hit the net
   if(Ball.x >=0 && Ball.x <= 1.5 && Ball.z >= 0.50 && Ball.z <= 0.65 && Ball.y >= 1.86 && Ball.y <= 1.88){
@@ -152,16 +199,123 @@ void judgeWinner(ball& Ball, bool& isPlayer1Starter, bool& isPlayer2Starter, int
   // The ball hits outsize of the table
   else if(!(Ball.x >= 0 && Ball.x <= 1.5 && Ball.y >= 0.5 && Ball.y <= 3.24) && Ball.z <= 0.5)
   {
-    if(Ball.vy > 0){
-      score2++;
-      isPlayer2Starter = true;
+    if(starter_this_round == 1){ // When player1 is the starter
+      if(Ball.y > 1.87){
+        score1++;
+        isPlayer1Starter = true;
+        return;
+      }
+      else{
+        score2++;
+        isPlayer2Starter = true;
+        return;
+      }
     }
-    else{
-      score1++;
-      isPlayer1Starter = true;
+    else if(starter_this_round == 2){ // When player2 is the starter
+      if(Ball.y < 1.87){
+        score2++;
+        isPlayer2Starter = true;
+        return;
+      }
+      else{
+        score1++;
+        isPlayer1Starter = true;
+        return;
+      }
     }
+    else{ // Normal round
+      if(Ball.vy > 0){ // When the speed of the ball > 0
+        if(ball_hit_left_table == 1){
+          if(Ball.y < 1.87){
+            // 2win;
+            score2++;
+            isPlayer2Starter = true;
+            return;
+          }
+          else{
+            // 1win;
+             score1++;
+            isPlayer1Starter = true;
+            return;
+          }
+        }
+        else{
+          //2 win;
+          score2++;
+          isPlayer2Starter = true;
+          return;
+        }
+      }
+      else{ // When the speed of the ball < 0
+        if(ball_hit_right_table == 1){
+          if(Ball.y > 1.87){
+            // 1win;
+            score1++;
+            isPlayer1Starter = true;
+            return;
+          }
+          else{
+            // 2win
+            score2++;
+            isPlayer2Starter = true;
+            return;
+          }
+        }
+        else{
+          // 1win
+          score1++;
+          isPlayer1Starter = true;
+          return;
+        }
+      }
+    }
+  }
+
+  // The ball hits the left table twice.
+  if(ball_hit_left_table >= 2){
+    score2++;
+    isPlayer2Starter = true;
     return;
   }
+  // The ball hits the right table twice.
+  if(ball_hit_right_table >= 2){
+    score1++;
+    isPlayer1Starter = true;
+    return;
+  }
+
+  // When the left plyer start the ball and the ball didn't hit the left side table once
+  if(Ball.y > 1.87 && starter_this_round == 1)
+  {
+    if(ball_hit_left_table == 0){
+      score2++;
+      isPlayer2Starter = true;
+      return;
+    }
+  }
+
+  // When the right plyer start the ball and the ball didn't hit the right side table once
+  if(Ball.y < 1.87 && starter_this_round == 2)
+  {
+    if(ball_hit_right_table == 0){
+      score1++;
+      isPlayer1Starter = true;
+      return;
+    }
+  }
+
+  if(ball_hit_left_table == 1 && starter_this_round == 0 && Ball.vy > 0) { // Player1 failed to kick the ball over the net
+    score2++;
+    isPlayer2Starter = true;
+    return;
+  }
+  if(ball_hit_right_table == 1 && starter_this_round == 0 && Ball.vy < 0) { // Player2 failed to kick the ball over the net
+    score1++;
+    isPlayer1Starter = true;
+    return;
+  }
+
+
 }
 
 
@@ -225,6 +379,8 @@ int main(int argc, char *argv[])
   bool isPlayer1Starter = true;
   bool isPlayer2Starter = false;
   int score1 = 0, score2 = 0;
+  int ball_hit_left_table = 0, ball_hit_right_table = 0;
+  int starter_this_round = 0;
   ball Ball;
   Ball.x = 0.0;
   Ball.y = 0.0;
@@ -293,22 +449,26 @@ int main(int argc, char *argv[])
         
         if(player1State.isHitting) {
           Ball.vx = 0;
-          Ball.vy = 2.0;
+          Ball.vy = 3.0;
           Ball.vz = 0;
 
           isPlayer1Starter = false;
+          starter_this_round = 1;
+          ball_hit_left_table = 0;
+          ball_hit_right_table = 0;
         }
       }
       else if(isPlayer2Starter && !isPlayer1Starter)
       {
         float transformedX = 1.5 - player2State.player1X;
         float transformedY = 3.74 - player2State.player1Y;
+
         Ball.x = transformedX;
         Ball.y = transformedY;
         Ball.z = player2State.player1Z;
 
-        
-        std::cout << "1 is the Stater." << std::endl;
+
+        std::cout << "2 is the Stater." << std::endl;
         std::cout << "Ball: " << Ball.x << " " << Ball.y << " " << Ball.z <<std::endl;
         std::cout << "Player1: " << player1State.player1X << " " << player1State.player1Y << " " << player1State.player1Z << std::endl;
         std::cout << "Player2: " << player2State.player1X << " " << player2State.player1Y << " " << player2State.player1Z << std::endl;
@@ -316,15 +476,18 @@ int main(int argc, char *argv[])
 
         if(player2State.isHitting) {
           Ball.vx = 0;
-          Ball.vy = -2.0;
+          Ball.vy = -3.0;
           Ball.vz = 0;
 
           isPlayer2Starter = false;
+          starter_this_round = 2;
+          ball_hit_left_table = 0;
+          ball_hit_right_table = 0;
         }
       }
       else{
-        updateBall(Ball, player1State, player2State);
-        judgeWinner(Ball, isPlayer1Starter, isPlayer2Starter, score1, score2);
+        updateBall(Ball, player1State, player2State, ball_hit_left_table, ball_hit_right_table, starter_this_round);
+        judgeWinner(Ball, isPlayer1Starter, isPlayer2Starter, score1, score2, ball_hit_left_table, ball_hit_right_table, starter_this_round);
       }
 
       //+++++++++++++++++++++++++++++
@@ -335,7 +498,7 @@ int main(int argc, char *argv[])
       float temp1 = player1State.player2X, temp2 = player1State.player2Y;
       player1State.player1Score = score1;
       player1State.player2Score = score2;
-      player1State.player2X = player2State.player2X;
+      player1State.player2X = player2State.player2X;//player2 -> locx 
       player1State.player2Y = player2State.player2Y;
       player1State.player2Z = 0;
       player1State.ballX = Ball.x;
