@@ -141,6 +141,7 @@ void updateBall(ball& Ball,State& player1State,State& player2State,int& ball_hit
           Ball.vy = -1.0 *Ball.vy;
         }
       }
+      Ball.vx = 3 * (0.75 - player1State.player1X);
       
       // Clear the count for hit left/right side table
       ball_hit_left_table = 0;
@@ -166,6 +167,7 @@ void updateBall(ball& Ball,State& player1State,State& player2State,int& ball_hit
           Ball.vy = -1.0 *Ball.vy;
         }
       }
+      Ball.vx = 3 * (0.75 - transformedX);
       // Clear the count for hit left/right side table
       ball_hit_left_table = 0;
       ball_hit_right_table = 0;
