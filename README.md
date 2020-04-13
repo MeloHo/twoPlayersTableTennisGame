@@ -3,7 +3,9 @@
 This is a team project for 24783-Advanced Engineering Computation, Spring 2020
 
 
-<img src="https://github.com/MeloHo/twoPlayersTableTennisGame/tree/master/images/Overview.png" width="40%">
+<img src="https://github.com/MeloHo/twoPlayersTableTennisGame/tree/master/images/Overview.png" width="10%">
+
+![An image](https://github.com/MeloHo/twoPlayersTableTennisGame/tree/master/images/Overview.png) <!-- .element height="20%" width="20%" -->
 
 We use [Proto Buffers by Google](https://developers.google.com/protocol-buffers) and Socket for network programming. Best tutorial is [here](https://beej.us/guide/bgnet/html/#client-server-background). 
 
