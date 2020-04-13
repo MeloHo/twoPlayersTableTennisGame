@@ -122,7 +122,7 @@ void updateBall(ball& Ball,State& player1State,State& player2State,int& ball_hit
     float transformedX = 1.5 - player2State.player1X;
     float transformedY = 3.74 - player2State.player1Y;
     // Player1 hit the ball
-    if(sqrt(pow(Ball.x - player1State.player1X, 2) + pow(Ball.y - player1State.player1Y, 2) + pow(Ball.z - player1State.player1Z, 2)) < 0.5 && Ball.vy < 0)
+    if(sqrt(pow(Ball.x - player1State.player1X, 2) + pow(Ball.y - player1State.player1Y, 2) + pow(Ball.z - player1State.player1Z, 2)) < 0.3 && Ball.vy < 0)
     {
       if(starter_this_round == 2){
         if(player1State.isHitting){
@@ -141,14 +141,14 @@ void updateBall(ball& Ball,State& player1State,State& player2State,int& ball_hit
           Ball.vy = -1.0 *Ball.vy;
         }
       }
-      Ball.vx = 3 * (0.75 - player1State.player1X);
+      Ball.vx += 3 * (0.75 - player1State.player1X);
       
       // Clear the count for hit left/right side table
       ball_hit_left_table = 0;
       ball_hit_right_table = 0;
     }
     // Player2 hit the ball
-    else if(sqrt(pow(Ball.x - transformedX, 2) + pow(Ball.y - transformedY, 2) + pow(Ball.z - player2State.player1Z, 2)) < 0.5 && Ball.vy > 0)
+    else if(sqrt(pow(Ball.x - transformedX, 2) + pow(Ball.y - transformedY, 2) + pow(Ball.z - player2State.player1Z, 2)) < 0.3 && Ball.vy > 0)
     {
       if(starter_this_round == 1){
         if(player2State.isHitting){
@@ -167,7 +167,7 @@ void updateBall(ball& Ball,State& player1State,State& player2State,int& ball_hit
           Ball.vy = -1.0 *Ball.vy;
         }
       }
-      Ball.vx = 3 * (0.75 - transformedX);
+      Ball.vx += 3 * (0.75 - transformedX);
       // Clear the count for hit left/right side table
       ball_hit_left_table = 0;
       ball_hit_right_table = 0;
