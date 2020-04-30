@@ -12,7 +12,7 @@ target_include_directories(lclient
 
 message("dir:" ${CMAKE_CURRENT_BINARY_DIR})
 
-target_link_libraries(lclient fssimplewindow ysclass msg ${PROTOBUF_LIBRARIES})
+target_link_libraries(lclient fssimplewindow ysclass msg ${PROTOBUF_LIBRARIES} ysbitmapfont)
 
 #add_executable(winClient winClient.cpp)
 #add_executable(unixClient unixClient.cpp)

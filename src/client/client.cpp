@@ -20,6 +20,7 @@
 #include "player.h"
 #include "table.h"
 #include "fssimplewindow.h" // For graphics
+#include "ysglfontdata.h"
 #include "ysclass.h"
 
 
@@ -248,7 +249,7 @@ int main(int argc, char *argv[])
         }
 
         player.update(locX, locY);
-        std::cout << "getX:" << player.getX() << " getY:" << player.getY() << " getZ:" << player.getZ() << std::endl; 
+        std::cout << "getX:" << player.getX() << " getY:" << player.getY() << " getZ:" << player.getZ() << std::endl;
         state.player1X = player.getX();
         state.player1Y = player.getY();
         state.player1Z = player.getZ();
@@ -318,6 +319,7 @@ int main(int argc, char *argv[])
         glLoadIdentity();
         glMultMatrixf(modelViewGl);
 
+
         /* draw stuff */
         ball.draw();
         player.draw();
@@ -332,8 +334,18 @@ int main(int argc, char *argv[])
         //     glVertex3f(0.001*i, 1.87, 0);
         //     glVertex3f(0.001*i, 1.87, 3);
         // }
-        
+
         // glEnd();
+
+        glColor3ub(0,0,0);
+        glWindowPos2i(100,700);
+        std::string score1 = "Player1: " + std::to_string(state.player1Score);
+        YsGlDrawFontBitmap32x48(score1.c_str());
+
+        glColor3ub(0,0,0);
+        glWindowPos2i(800,700);
+        std::string score2 = "Player2: " + std::to_string(state.player2Score);
+        YsGlDrawFontBitmap32x48(score2.c_str());
 
         FsSwapBuffers();
         FsSleep(10);
