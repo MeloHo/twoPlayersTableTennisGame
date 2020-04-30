@@ -118,7 +118,7 @@ void Table::makeSurfacePl() {
 }
 
 void Table::makeSurfaceCol() {
-    vector<vector<float>> cols(5, {153.0/255.0, 92.0/255.0, 33.0/255.0});
+    vector<vector<float>> cols(5, {62/255.0, 35.0/255.0, 26.0/255.0});
     surfacePlCol = cols;
     // surfacePlCol = vector<vector<float>> {
         // { 0.0f, 0.0f, 0.0f, 0.0f },
@@ -216,7 +216,7 @@ void Table::makeLegPl() {
 }
 
 void Table::makeLegCol() {
-    vector<vector<float>> cols(5*8, {153.0/255.0, 92.0/255.0, 33.0/255.0});
+    vector<vector<float>> cols(5*8, {62/255.0, 35/255.0, 26/255.0});
     legPlCol = cols;
 }
 
