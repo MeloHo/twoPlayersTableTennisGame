@@ -2,18 +2,16 @@
 #include <iostream>
 #include "pngRenderer.h"
 
-pngRenderer::pngRenderer() {
-    initFilenames();
+pngRenderer::pngRenderer(std::string pathToExec) {
+    initFilenames(pathToExec);
     initQuadInfo();
     buildTextures();
 }
 
-std::string pngRenderer::findPathToImages() {
+std::string pngRenderer::findPathToImages(std::string pathToExec) {
 
-    char *symlinkpath = "lclient";
-    char actualpath [PATH_MAX+1];
-
-    std::string ptr = realpath(symlinkpath, actualpath);
+    char actualpath [PATH_MAX];
+    std::string ptr = realpath(pathToExec.c_str(), actualpath);
     size_t found = 0, found2 = 0, temp = 0;
     while (found != std::string::npos) {
         found = ptr.find("/", temp);
@@ -29,8 +27,9 @@ std::string pngRenderer::findPathToImages() {
     return ptr;
 }
 
-void pngRenderer::initFilenames() {
-    std::string dir = findPathToImages();
+void pngRenderer::initFilenames(std::string pathToExec) {
+    std::string dir = findPathToImages(pathToExec);
+    std::cout << dir << std::endl;
     files = std::vector<std::string> {
         dir + "/wood_tile.png",
         dir + "/wood_bg.png",

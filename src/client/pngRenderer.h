@@ -17,8 +17,8 @@ private:
     std::vector<std::vector<float>> texCoors;
     std::vector<std::vector<float>> quadVertices;
 
-    std::string findPathToImages();
-    void initFilenames();
+    std::string findPathToImages(std::string pathToExec);
+    void initFilenames(std::string pathToExec);
 
     GLuint initTexture(std::string filename);
     void buildTextures();
@@ -27,7 +27,7 @@ private:
     void drawQuad(GLuint texture, int start);
 
 public:
-    pngRenderer();
+    pngRenderer(std::string pathToExec);
     ~pngRenderer() {}
     void draw();
 };

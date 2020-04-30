@@ -141,7 +141,8 @@ int main(int argc, char *argv[])
     FsOpenWindow(0,0,1200,800,1);
 
     /* Renders PNG images */
-    pngRenderer imgRenderer;
+    string pathToExec(argv[0]);
+    pngRenderer imgRenderer(pathToExec);
 
     //*********************************************
 
