@@ -14,6 +14,5 @@ message("dir:" ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(lclient fssimplewindow ysclass ysbitmap ysbitmapfont msg ${PROTOBUF_LIBRARIES})
 
-
 #add_executable(winClient winClient.cpp)
 #add_executable(unixClient unixClient.cpp)
