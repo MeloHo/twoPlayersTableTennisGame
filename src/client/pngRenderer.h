@@ -7,6 +7,8 @@
 #include <string.h>
 #include "fssimplewindow.h"
 #include "yspng.h"
+#include <limits.h>
+#include <stdlib.h>
 
 #define NUM_PNG_FILES 5
 
