@@ -1,14 +1,33 @@
 //client
+//linux/unix
+#ifdef __unix__
+
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/time.h>
+#include <sys/wait.h>
+#include "linuxClient.hpp"
+#define customSleep(t) sleep(t);
+
+#else //windows
 
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <windows.h>
 #include "winClient.hpp"
 
+//#define PROTOBUF_USE_DLLS
+#define customSleep(t) Sleep(t*1000)
+
+#endif
+
 #include <iostream>
 #include <string>
-#include <cstdio>
-#include <cstdlib>
+#include <stdio.h> 
+#include <stdlib.h>
+#include <string.h>
 #include <fcntl.h>
 #include <fstream>
 #include <cmath>
@@ -16,9 +35,7 @@
 #include "ball.h"
 #include "player.h"
 #include "table.h"
-//#include "pngRenderer.h"
 #include "fssimplewindow.h" // For graphics
-#include "ysglfontdata.h"
 #include "ysclass.h"
 
 #include "../msg/state.h"
@@ -48,9 +65,9 @@ void readBody(int csock, google::protobuf::uint32 siz, State &state)
 {
     int bytecount;
     Msg payload;
-    char buffer [siz+4];
+    char* buffer = new char[siz+4];
 
-    if((bytecount = recv(csock, (void *)buffer, 4+siz, MSG_WAITALL))== -1)
+    if((bytecount = recv(csock, (char *)buffer, 4+siz, MSG_WAITALL))== -1)
     {
         fprintf(stderr, "Error receiving data %d\n", errno);
     }
@@ -135,10 +152,6 @@ int main(int argc, char *argv[])
 {
     FsOpenWindow(0,0,1200,800,1);
 
-    /* Renders PNG images */
-    //string pathToExec(argv[0]);
-    //pngRenderer imgRenderer(pathToExec);
-
     //*********************************************
 
 
@@ -182,9 +195,7 @@ int main(int argc, char *argv[])
 
     Client client(port, serverIp);
     printf("client created \n");
-
     SOCKET clientSd = client.Connect();
-    
     if (clientSd == -1) return -1;
     printf("client connected\n");
 
@@ -199,7 +210,7 @@ int main(int argc, char *argv[])
     sscanf(msg, "%d", &Iam);
 
     printf("I am %d Player\n", Iam+1);
-    sleep(1000);
+    customSleep(1);
 
     /* waiting for the other player to connect */
     while (true){
@@ -213,7 +224,7 @@ int main(int argc, char *argv[])
             cout << "Both players connected" << endl;
             break;
         }
-        sleep(1000);
+        customSleep(1);
     }
 
     /* client state for the purpose of drawing */
@@ -251,7 +262,7 @@ int main(int argc, char *argv[])
         }
 
         player.update(locX, locY);
-        std::cout << "getX:" << player.getX() << " getY:" << player.getY() << " getZ:" << player.getZ() << std::endl;
+        std::cout << "getX:" << player.getX() << " getY:" << player.getY() << " getZ:" << player.getZ() << std::endl; 
         state.player1X = player.getX();
         state.player1Y = player.getY();
         state.player1Z = player.getZ();
@@ -279,7 +290,7 @@ int main(int argc, char *argv[])
         message.SerializeToCodedStream(coded_output);
 
         // send the package
-        if (bytecount = send(clientSd, (void*)pkt, siz, 0) == -1){
+        if (bytecount = send(clientSd, (char*)pkt, siz, 0) == -1){
             printf("error sending data\n");
             break;
         }
@@ -321,13 +332,11 @@ int main(int argc, char *argv[])
         glLoadIdentity();
         glMultMatrixf(modelViewGl);
 
-
         /* draw stuff */
         ball.draw();
         player.draw();
         opponent.draw();
         table.draw();
-        //imgRenderer.draw();
 
         // glColor3ub(0, 0, 255);
 
@@ -337,18 +346,8 @@ int main(int argc, char *argv[])
         //     glVertex3f(0.001*i, 1.87, 0);
         //     glVertex3f(0.001*i, 1.87, 3);
         // }
-
+        
         // glEnd();
-
-        glColor3ub(0,0,0);
-        glWindowPos2i(100,700);
-        std::string score1 = "Player1: " + std::to_string(state.player1Score);
-        YsGlDrawFontBitmap32x48(score1.c_str());
-
-        glColor3ub(0,0,0);
-        glWindowPos2i(800,700);
-        std::string score2 = "Player2: " + std::to_string(state.player2Score);
-        YsGlDrawFontBitmap32x48(score2.c_str());
 
         FsSwapBuffers();
         FsSleep(10);
@@ -356,7 +355,6 @@ int main(int argc, char *argv[])
     }
 
     /* game over & close socket */
-
     closesocket(clientSd);
     std::cout << "End of Game." << std::endl;
 }
