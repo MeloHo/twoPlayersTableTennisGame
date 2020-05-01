@@ -46,6 +46,14 @@ or from source:
 ## OpenGL Graphics.
 From [Soji](https://github.com/captainys/public). 
 
+# Structure
+
+
+		  /CMakelists.txt
+	  	  -public
+	 	  \twoPlayersTableTennisGame
+
+	
 # Build
 	mkdir build
 	cd build
@@ -63,3 +71,4 @@ for server: ./lserver.app/Contents/MacOS/lserver 8899
 for client1: ./lclient.app/Contents/MacOS/lclient 127.0.0.1 8899
 
 for client2: ./lclient.app/Contents/MacOS/lclient 127.0.0.1 8899
+
