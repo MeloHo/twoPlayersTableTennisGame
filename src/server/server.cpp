@@ -1,23 +1,44 @@
 //server
+#ifdef __unix__
+
+  #include <sys/types.h>
+  #include <sys/socket.h>
+  #include <netinet/in.h>
+  #include <arpa/inet.h>
+  #include <sys/uio.h>
+  #include <sys/time.h>
+  #include <sys/wait.h>
+  #include "linuxServer.hpp"
+
+#elif defined __APPLE__
+  #include <sys/types.h>
+  #include <sys/socket.h>
+  #include <netinet/in.h>
+  #include <arpa/inet.h>
+  #include <sys/uio.h>
+  #include <sys/time.h>
+  #include <sys/wait.h>
+  #include "linuxServer.hpp"
+
+#elif defined _WIN32
+  #include <winsock2.h>
+  #include <ws2tcpip.h>
+  #include <windows.h>
+  #include "winServer.hpp"
+
+#endif
+
 #include <iostream>
 #include <string>
 #include <stdio.h> 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <netdb.h>
-#include <sys/uio.h>
-#include <sys/time.h>
-#include <sys/wait.h>
 #include <fcntl.h>
 #include <fstream>
 #include <cmath>
 
-#include "linuxServer.hpp"
 #include "../msg/state.h"
 #include "../msg/msg.pb.h"
 

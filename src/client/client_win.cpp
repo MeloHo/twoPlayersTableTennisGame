@@ -1,25 +1,17 @@
 //client
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/uio.h>
-#include <sys/time.h>
-#include <sys/wait.h>
-#include "linuxClient.hpp"
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include "winServer.hpp"
 
 #include <iostream>
 #include <string>
-#include <stdio.h>
-
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <netdb.h>
-
+#include <cstdio>
+#include <cstdlib>
 #include <fcntl.h>
 #include <fstream>
+#include <cmath>
 
 #include "ball.h"
 #include "player.h"
@@ -191,7 +183,7 @@ int main(int argc, char *argv[])
     Client client(port, serverIp);
     printf("client created \n");
 
-    int clientSd = client.Connect();
+    SOCKET clientSd = client.Connect();
     
     if (clientSd == -1) return -1;
     printf("client connected\n");
@@ -207,7 +199,7 @@ int main(int argc, char *argv[])
     sscanf(msg, "%d", &Iam);
 
     printf("I am %d Player\n", Iam+1);
-    sleep(1);
+    sleep(1000);
 
     /* waiting for the other player to connect */
     while (true){
@@ -221,7 +213,7 @@ int main(int argc, char *argv[])
             cout << "Both players connected" << endl;
             break;
         }
-        sleep(1);
+        sleep(1000);
     }
 
     /* client state for the purpose of drawing */
@@ -365,6 +357,6 @@ int main(int argc, char *argv[])
 
     /* game over & close socket */
 
-    close(clientSd);
+    closesocket(clientSd);
     std::cout << "End of Game." << std::endl;
 }

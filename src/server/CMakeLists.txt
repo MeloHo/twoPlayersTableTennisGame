@@ -1,18 +1,17 @@
-find_package(Protobuf REQUIRED)
-
+find_package(protobuf REQUIRED)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
-
-add_executable(lserver MACOSX_BUNDLE server.cpp linuxServer.hpp linuxServer.cpp)
-
-
-target_link_libraries(lserver fssimplewindow ysclass msg ${PROTOBUF_LIBRARY})
-#add_executable(winServer winServer.cpp)
-#add_executable(unixServer unixServer.cpp)
-
-target_include_directories(lserver
-    PUBLIC
-    ${PROTOBUF_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "WindowsStore")
+	message(FATAL_ERROR "This framework not supported for UWP")
+elseif(MSVC)
+	find_library(WSOCK32_LIBRARY wsock32)
+	find_library(WS2_32_LIBRARY ws2_32)
+	add_executable(lserver server.cpp winServer.cpp winServer.hpp)
+	target_link_libraries(lserver ysclass msg ${Protobuf_LIBRARIES})
+	target_include_directories(lclient PUBLIC ${PROTOBUF_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} wsock32 ws2_32)
+else()
+	add_executable(lserver MACOSX_BUNDLE server.cpp linuxServer.hpp linuxServer.cpp)
+	target_link_libraries(lserver fssimplewindow ysclass msg ${PROTOBUF_LIBRARY})
+	target_include_directories(lclient PUBLIC ${PROTOBUF_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
+endif()
 
 
