@@ -3,7 +3,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <windows.h>
-#include "winServer.hpp"
+#include "winClient.hpp"
 
 #include <iostream>
 #include <string>
@@ -16,7 +16,7 @@
 #include "ball.h"
 #include "player.h"
 #include "table.h"
-#include "pngRenderer.h"
+//#include "pngRenderer.h"
 #include "fssimplewindow.h" // For graphics
 #include "ysglfontdata.h"
 #include "ysclass.h"
@@ -136,8 +136,8 @@ int main(int argc, char *argv[])
     FsOpenWindow(0,0,1200,800,1);
 
     /* Renders PNG images */
-    string pathToExec(argv[0]);
-    pngRenderer imgRenderer(pathToExec);
+    //string pathToExec(argv[0]);
+    //pngRenderer imgRenderer(pathToExec);
 
     //*********************************************
 
@@ -327,7 +327,7 @@ int main(int argc, char *argv[])
         player.draw();
         opponent.draw();
         table.draw();
-        imgRenderer.draw();
+        //imgRenderer.draw();
 
         // glColor3ub(0, 0, 255);
 
