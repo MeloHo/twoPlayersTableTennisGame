@@ -2,6 +2,8 @@
 #include <iostream>
 #include "pngRenderer.h"
 
+#define PATH_MAX 1024
+
 pngRenderer::pngRenderer(std::string pathToExec) {
     initFilenames(pathToExec);
     initQuadInfo();
